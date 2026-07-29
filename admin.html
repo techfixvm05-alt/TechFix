@@ -11,7 +11,7 @@
   <header class="bg-gray-900 text-white py-6 px-6 shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
     <div>
       <h1 class="text-2xl font-bold">TechFix Vm - Panel de Control</h1>
-      <p class="text-gray-400 text-xs">Gestión inteligente de consultas</p>
+      <p class="text-gray-400 text-xs">Sincronizado con Google Sheets en la nube</p>
     </div>
     <div class="flex flex-wrap gap-2">
       <button onclick="cargarConsultas()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition shadow">
@@ -80,7 +80,7 @@
       </div>
 
       <div id="sinDatos" class="hidden text-center py-8 text-gray-400">
-        No hay consultas registradas todavía.
+        No hay consultas registradas en Google Sheets.
       </div>
     </div>
   </main>
@@ -92,31 +92,25 @@
 
     async function cargarConsultas() {
       const tbody = document.getElementById("tablaCuerpo");
-      tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-blue-600 animate-pulse font-semibold">Cargando registros...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-blue-600 animate-pulse font-semibold">Sincronizando con Google Sheets...</td></tr>`;
 
-      let datosCargados = [];
-
-      // Intento leer de Google Sheets por si acaso responde
       try {
-        const response = await fetch(URL_WEB_APP_SHEETS);
-        const text = await response.text();
-        const parsed = JSON.parse(text);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          datosCargados = parsed;
-          localStorage.setItem('techfix_consultas', JSON.stringify(parsed));
-        }
-      } catch (e) {
-        // Si Google bloquea la lectura, pasamos silenciosamente al respaldo local
+        // Usamos un servicio proxy optimizado para saltar el bloqueo CORS del navegador
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(URL_WEB_APP_SHEETS)}`;
+        const response = await fetch(proxyUrl);
+        const data = await response.json();
+        
+        listaConsultasGlobal = Array.isArray(data) ? data : [];
+        actualizarEstadisticas(listaConsultasGlobal);
+        filtrarDatos();
+      } catch (err) {
+        console.error("Error al conectar:", err);
+        // Respaldo automático con localStorage si hay problemas de red puntuales
+        let locales = JSON.parse(localStorage.getItem('techfix_consultas')) || [];
+        listaConsultasGlobal = locales;
+        actualizarEstadisticas(listaConsultasGlobal);
+        filtrarDatos();
       }
-
-      // Si no se pudo leer de Google debido al bloqueo CORS, usamos el almacenamiento local seguro
-      if (datosCargados.length === 0) {
-        datosCargados = JSON.parse(localStorage.getItem('techfix_consultas')) || [];
-      }
-
-      listaConsultasGlobal = datosCargados;
-      actualizarEstadisticas(listaConsultasGlobal);
-      filtrarDatos();
     }
 
     function actualizarEstadisticas(consultas) {
@@ -176,42 +170,42 @@
         const tr = document.createElement("tr");
         tr.className = "hover:bg-gray-50 transition";
         tr.innerHTML = `
-          <td class="py-3 px-4 text-xs text-gray-500">${c.fecha}</td>
-          <td class="py-3 px-4 font-semibold text-gray-800">${c.cliente}</td>
-          <td class="py-3 px-4 text-blue-600 font-mono">${c.telefono}</td>
-          <td class="py-3 px-4 font-medium">${c.equipo}</td>
-          <td class="py-3 px-4"><span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">${c.falla}</span></td>
-          <td class="py-3 px-4 font-bold text-green-700">${precioMostrar}</td>
+          <td class="py-3 px-4 text-xs text-gray-500">${c.fecha || '-'}</td>
+          <td class="py-3 px-4 font-semibold text-gray-800">${c.cliente || '-'}</td>
+          <td class="py-3 px-4 text-blue-600 font-mono">${c.telefono || '-'}</td>
+          <td class="py-3 px-4 font-medium">${c.equipo || '-'}</td>
+          <td class="py-3 px-4"><span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">${c.falla || '-'}</span></td>
+          <td class="py-3 px-4 font-bold text-green-700">${precioMostrar || '-'}</td>
           <td class="py-3 px-4 text-center space-x-1">
             <a href="${waLink}" target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs shadow transition inline-block">💬 Chatear</a>
-            <button onclick='eliminarConsultaFila(${c.id || index})' class="bg-red-500 hover:bg-red-600 text-white font-bold px-2 py-1.5 rounded-lg text-xs shadow transition inline-block">🗑️</button>
+            <button onclick='eliminarConsultaFila(${JSON.stringify(c)})' class="bg-red-500 hover:bg-red-600 text-white font-bold px-2 py-1.5 rounded-lg text-xs shadow transition inline-block">🗑️</button>
           </td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    function eliminarConsultaFila(idUnico) {
-      if (!confirm("¿Eliminar esta consulta del panel?")) return;
-
-      let locales = JSON.parse(localStorage.getItem('techfix_consultas')) || [];
-      locales = locales.filter(c => c.id !== idUnico);
-      localStorage.setItem('techfix_consultas', JSON.stringify(locales));
+    function eliminarConsultaFila(c) {
+      if (!confirm(`¿Eliminar la consulta de ${c.cliente}?`)) return;
 
       try {
-        navigator.sendBeacon(URL_WEB_APP_SHEETS, JSON.stringify({ action: "delete_id", id: idUnico }));
+        navigator.sendBeacon(URL_WEB_APP_SHEETS, JSON.stringify({
+          action: "delete",
+          cliente: c.cliente,
+          telefono: c.telefono,
+          fecha: c.fecha
+        }));
       } catch (e) {}
 
-      cargarConsultas();
+      setTimeout(cargarConsultas, 1200);
     }
 
     function borrarHistorial() {
-      if (confirm("¿Estás seguro de vaciar todo el panel?")) {
-        localStorage.removeItem('techfix_consultas');
+      if (confirm("¿Estás seguro de vaciar todo el panel y borrar los registros del Google Sheet?")) {
         try {
           navigator.sendBeacon(URL_WEB_APP_SHEETS, JSON.stringify({ action: "clear_all" }));
         } catch (e) {}
-        cargarConsultas();
+        setTimeout(cargarConsultas, 1200);
       }
     }
 
