@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servicio Técnico - Cotizador On-Line</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col justify-between">
+
+  <header class="bg-blue-600 text-white py-8 px-4 text-center shadow-md">
+    <h1 class="text-3xl md:text-4xl font-extrabold mb-2">TechFix Vm</h1>
+    <p class="text-blue-100 text-sm md:text-base max-w-md mx-auto">Cotizá la reparación de tu equipo al instante con precios actualizados.</p>
+  </header>
+
+  <main class="max-w-xl w-full mx-auto px-4 py-8 flex-grow">
+    
+    <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center border-b pb-3">Cotizador en Línea</h2>
+      
+      <div id="estadoCarga" class="mb-4 p-3 rounded-lg text-xs font-semibold text-center bg-blue-50 text-blue-700 animate-pulse">
+        Cargando lista de repuestos y precios...
+      </div>
+
+      <div class="space-y-5">
+        
+        <div>
+          <label class="block font-semibold mb-1 text-sm text-gray-700">1. Escribí la Marca / Modelo de tu Celular:</label>
+          <input 
+            type="text" 
+            id="inputModelo" 
+            list="listaModelos" 
+            placeholder="Ej: Samsung A03, Motorola G20..." 
+            class="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-sm"
+          >
+          <datalist id="listaModelos"></datalist>
+          <p class="text-xs text-gray-400 mt-1">Podés escribir la marca y modelo para ver sugerencias.</p>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1 text-sm text-gray-700">2. Seleccioná la Falla / Reparación:</label>
+          <select id="selectFalla" class="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-sm bg-white">
+            <option value="">-- Seleccionar Falla --</option>
+            <option value="modulo">Módulo / Pantalla</option>
+            <option value="bateria">Cambio de Batería</option>
+            <option value="placa">Placa de Carga / Pin</option>
+            <option value="otro">Otra Falla / Consulta General</option>
+          </select>
+        </div>
+
+        <button onclick="calcularPrecio()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition duration-200 text-base">
+          Calcular Precio Estimado
+        </button>
+      </div>
+
+      <div id="resultado" class="mt-6 p-5 rounded-xl hidden transition-all duration-300"></div>
+    </div>
+
+    <div class="mt-8 text-center text-xs text-gray-500 space-y-1">
+      <p>💡 Precios sujetos a verificación de stock y diagnóstico previo del equipo.</p>
+      <p>Garantía y mano de obra profesional incluida en todos los arreglos.</p>
+    </div>
+
+  </main>
+
+  <div id="modalDatos" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border border-gray-100">
+      <h3 class="text-lg font-bold text-gray-800 mb-1">¡Un último paso!</h3>
+      <p class="text-xs text-gray-500 mb-4">Ingresá tus datos para contactarte con nuestro servicio técnico vía WhatsApp.</p>
+      
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Nombre Completo:</label>
+          <input type="text" id="modalNombre" placeholder="Ej: Juan Pérez" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Teléfono / WhatsApp:</label>
+          <input type="tel" id="modalTelefono" placeholder="Ej: 3534123456" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+        </div>
+      </div>
+
+      <div class="mt-5 flex gap-2">
+        <button onclick="cerrarModal()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2.5 rounded-xl text-sm transition">
+          Cancelar
+        </button>
+        <button onclick="confirmarYEnviarWhatsApp()" class="w-1/2 bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl text-sm shadow transition">
+          Continuar 💬
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-gray-800 text-gray-400 py-4 text-center text-xs">
+    <p>© Servicio Técnico de Celulares - Todos los derechos reservados</p>
+  </footer>
+
+  <script>
+    const NUMERO_WHATSAPP = "5493534132871"; 
+
+    const URL_CSV_MODULOS  = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQI2TrO6wINfTKsQSil8S8u5_eD_8VpExqZQM45Rv5A6v2EemWXDKGAi5aJirH9dq5ZlaDCFs9SL5-c/pub?gid=1530250286&single=true&output=csv";
+    const URL_CSV_BATERIAS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQI2TrO6wINfTKsQSil8S8u5_eD_8VpExqZQM45Rv5A6v2EemWXDKGAi5aJirH9dq5ZlaDCFs9SL5-c/pub?gid=315672756&single=true&output=csv";
+    const URL_CSV_PLACAS   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQI2TrO6wINfTKsQSil8S8u5_eD_8VpExqZQM45Rv5A6v2EemWXDKGAi5aJirH9dq5ZlaDCFs9SL5-c/pub?gid=2008820176&single=true&output=csv";
+
+    let baseModulos = {};
+    let baseBaterias = {};
+    let basePlacas = {};
+
+    let cargasCompletadas = 0;
+    let consultaActual = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      cargarDatosSheets();
+    });
+
+    function normalizarTexto(txt) {
+      if (!txt) return '';
+      return txt.toString().toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .trim().replace(/\s+/g, ' ');
+    }
+
+    function formatearPrecioAMiles(precioTexto) {
+      if (!precioTexto) return '';
+      let str = precioTexto.toString().replace('$', '').trim();
+      let soloDigitos = str.replace(/[^0-9]/g, '');
+      if (!soloDigitos) return precioTexto;
+
+      let numero = parseInt(soloDigitos, 10);
+
+      if (str.includes(',') || str.includes('.')) {
+        let partes = str.split(/[,.]/);
+        if (partes.length > 1 && partes[partes.length - 1].length === 2) {
+          numero = Math.round(numero / 100);
+        }
+      }
+
+      let miles = Math.round(numero / 1000);
+      return `$${miles}mil`;
+    }
+
+    function actualizarEstadoCarga() {
+      cargasCompletadas++;
+      if (cargasCompletadas >= 3) {
+        const elem = document.getElementById("estadoCarga");
+        elem.classList.remove("bg-blue-50", "text-blue-700", "animate-pulse");
+        elem.classList.add("bg-green-50", "text-green-700");
+        elem.innerHTML = "✓ Lista de precios cargada y actualizada exitosamente.";
+        actualizarAutocompletado();
+      }
+    }
+
+    function procesarCSV(data, objetoDestino) {
+      data.forEach(row => {
+        let keys = Object.keys(row);
+        let colMarca = keys.find(k => normalizarTexto(k) === 'marca');
+        let colModelo = keys.find(k => normalizarTexto(k) === 'modelo');
+        let colPrecio = keys.find(k => 
+          normalizarTexto(k) === 'total' || 
+          normalizarTexto(k).includes('precio final') || 
+          normalizarTexto(k).includes('total')
+        );
+
+        if (colModelo && row[colModelo]) {
+          const marcaVal = (colMarca && row[colMarca]) ? row[colMarca].toString().trim() : '';
+          const modeloVal = row[colModelo].toString().trim();
+          
+          let nombreMostrar = modeloVal;
+          if (marcaVal && !normalizarTexto(modeloVal).includes(normalizarTexto(marcaVal))) {
+            nombreMostrar = `${marcaVal} ${modeloVal}`;
+          }
+
+          let precioVal = (colPrecio && row[colPrecio]) ? row[colPrecio].toString().trim() : 'Consultar';
+
+          objetoDestino[normalizarTexto(nombreMostrar)] = { nombreCompleto: nombreMostrar, precioFinal: precioVal };
+          objetoDestino[normalizarTexto(modeloVal)] = { nombreCompleto: nombreMostrar, precioFinal: precioVal };
+        }
+      });
+    }
+
+    async function descargarYParsear(url, objetoDestino) {
+      try {
+        const response = await fetch(url);
+        const csvText = await response.text();
+        Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+          complete: function(results) {
+            procesarCSV(results.data, objetoDestino);
+            actualizarEstadoCarga();
+          }
+        });
+      } catch (error) {
+        console.error("Error al descargar CSV:", error);
+        actualizarEstadoCarga();
+      }
+    }
+
+    function cargarDatosSheets() {
+      descargarYParsear(URL_CSV_MODULOS, baseModulos);
+      descargarYParsear(URL_CSV_BATERIAS, baseBaterias);
+      descargarYParsear(URL_CSV_PLACAS, basePlacas);
+    }
+
+    function actualizarAutocompletado() {
+      const datalist = document.getElementById("listaModelos");
+      datalist.innerHTML = "";
+      
+      const modelosUnicos = new Map();
+      [baseModulos, baseBaterias, basePlacas].forEach(base => {
+        Object.values(base).forEach(item => {
+          modelosUnicos.set(normalizarTexto(item.nombreCompleto), item.nombreCompleto);
+        });
+      });
+
+      Array.from(modelosUnicos.values()).sort().forEach(modelo => {
+        const option = document.createElement("option");
+        option.value = modelo;
+        datalist.appendChild(option);
+      });
+    }
+
+    function calcularPrecio() {
+      const busqueda = document.getElementById("inputModelo").value.trim();
+      const modeloKey = normalizarTexto(busqueda);
+      const falla = document.getElementById("selectFalla").value;
+      const contenedorResultado = document.getElementById("resultado");
+
+      if (!busqueda || !falla) {
+        alert("Por favor ingresá tu modelo y seleccioná la falla.");
+        return;
+      }
+
+      contenedorResultado.classList.remove("hidden", "bg-green-50", "bg-amber-50", "border-green-300", "border-amber-300", "text-green-900", "text-amber-900");
+      contenedorResultado.classList.add("border");
+
+      if (falla === "otro") {
+        consultaActual = { equipo: busqueda, falla: "Consulta Especial / Otra Falla", precio: "Personalizado" };
+
+        contenedorResultado.classList.add("bg-amber-50", "border-amber-300", "text-amber-900");
+        contenedorResultado.innerHTML = `
+          <div class="text-center">
+            <p class="font-bold text-base mb-1">Consulta Personalizada</p>
+            <p class="text-xs mb-4 text-amber-800">Para esta falla, escribinos directo por WhatsApp y te damos el presupuesto en el momento.</p>
+            <button onclick="abrirModal()" class="inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-5 rounded-xl transition text-sm shadow">
+              Consultar por WhatsApp
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      let itemEncontrado = null;
+      let nombreFallaTexto = "";
+
+      if (falla === "modulo") {
+        itemEncontrado = baseModulos[modeloKey];
+        nombreFallaTexto = "Módulo / Pantalla";
+      } else if (falla === "bateria") {
+        itemEncontrado = baseBaterias[modeloKey];
+        nombreFallaTexto = "Cambio de Batería";
+      } else if (falla === "placa") {
+        itemEncontrado = basePlacas[modeloKey];
+        nombreFallaTexto = "Placa de Carga";
+      }
+
+      if (!itemEncontrado) {
+        consultaActual = { equipo: busqueda, falla: nombreFallaTexto, precio: "No Encontrado" };
+
+        contenedorResultado.classList.add("bg-amber-50", "border-amber-300", "text-amber-900");
+        contenedorResultado.innerHTML = `
+          <div class="text-center">
+            <p class="font-bold text-base mb-1">Modelo no encontrado</p>
+            <p class="text-xs mb-4 text-amber-800">No tenemos cargado el precio automático para "${busqueda}" en "${nombreFallaTexto}". ¡Podemos cotizarlo por WhatsApp!</p>
+            <button onclick="abrirModal()" class="inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-5 rounded-xl transition text-sm shadow">
+              Consultar por WhatsApp
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      const precioOriginal = itemEncontrado.precioFinal;
+      const precioRedondeado = formatearPrecioAMiles(precioOriginal);
+
+      consultaActual = { 
+        equipo: itemEncontrado.nombreCompleto, 
+        falla: nombreFallaTexto, 
+        precio: precioOriginal 
+      };
+
+      contenedorResultado.classList.add("bg-green-50", "border-green-300", "text-green-900");
+      contenedorResultado.innerHTML = `
+        <div class="text-center">
+          <p class="text-xs text-green-700 font-bold tracking-wider uppercase mb-1">Presupuesto Estimado</p>
+          <p class="text-5xl font-extrabold text-green-700 my-2">${precioRedondeado}</p>
+          <p class="text-xs text-gray-500 mb-4">Incluye repuesto, instalación y garantía.</p>
+          <button onclick="abrirModal()" class="inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition text-sm shadow-lg hover:shadow-xl">
+            Pedir Turno / Enviar por WhatsApp
+          </button>
+        </div>
+      `;
+    }
+
+   function abrirModal() { document.getElementById("modalDatos").classList.remove("hidden"); document.getElementById("modalDatos").classList.add("flex"); }
+    function cerrarModal() { document.getElementById("modalDatos").classList.add("hidden"); document.getElementById("modalDatos").classList.remove("flex"); }
+
+    const URL_WEB_APP_SHEETS = "https://script.google.com/macros/s/AKfycbwwFDccF0nWLL-sFf-R-YrCH1ceAbNz6031_XdUQX6buwNZgsk9AiOtngZbEF8Gvphr/exec";
+
+function confirmarYEnviarWhatsApp() {
+      const nombre = document.getElementById("modalNombre").value.trim();
+      const telefono = document.getElementById("modalTelefono").value.trim();
+      if (!nombre || !telefono) { alert("Completá nombre y teléfono."); return; }
+
+      const nuevaConsulta = {
+        id: Date.now(),
+        fecha: new Date().toLocaleString('es-AR'),
+        cliente: nombre,
+        telefono: telefono,
+        equipo: consultaActual.equipo,
+        falla: consultaActual.falla,
+        precio: consultaActual.precio
+      };
+
+      // 1. Guardar localmente
+      let consultas = JSON.parse(localStorage.getItem('techfix_consultas')) || [];
+      consultas.unshift(nuevaConsulta);
+      localStorage.setItem('techfix_consultas', JSON.stringify(consultas));
+
+      // 2. Formatear precio y armar mensaje
+      const precioTxt = (consultaActual.precio !== "Personalizado" && consultaActual.precio !== "No Encontrado") ? formatearPrecioAMiles(consultaActual.precio) : consultaActual.precio;
+      const mensajeWA = encodeURIComponent(`Hola! Soy ${nombre}. Vi en la web la cotización para reparar mi ${consultaActual.equipo} (${consultaActual.falla}) por un valor de ${precioTxt}. Quisiera coordinar un turno.`);
+
+      // 3. Abrir WhatsApp al instante y cerrar modal
+      cerrarModal();
+      window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensajeWA}`, '_blank');
+
+      // 4. Enviar a Google Sheets en segundo plano silencioso
+      if (URL_WEB_APP_SHEETS && URL_WEB_APP_SHEETS.includes('script.google.com')) {
+  try {
+    fetch(URL_WEB_APP_SHEETS, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(nuevaConsulta),
+      keepalive: true
+    });
+  } catch (err) {
+    console.error("Error en segundo plano con Sheets:", err);
+  }
+}
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechFix Vm - Panel Administrador</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen">
+
+  <header class="bg-gray-900 text-white py-6 px-6 shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
+    <div>
+      <h1 class="text-2xl font-bold">TechFix Vm - Panel de Control</h1>
+      <p class="text-gray-400 text-xs">Sincronizado con Google Sheets en la nube</p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <button onclick="cargarConsultas()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition shadow">
+        🔄 Actualizar
+      </button>
+      <button onclick="exportarCSV()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition shadow">
+        📥 Descargar Excel / CSV
+      </button>
+      <button onclick="borrarHistorial()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition shadow">
+        🗑️ Limpiar Historial
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-8">
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div class="bg-white rounded-2xl shadow-md p-5 border border-gray-200 flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Total Consultas</p>
+          <h3 id="statTotal" class="text-2xl font-extrabold text-gray-800">0</h3>
+        </div>
+        <div class="bg-blue-50 text-blue-600 p-3 rounded-xl text-xl">📋</div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-md p-5 border border-gray-200 flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Presupuesto Estimado en Cartera</p>
+          <h3 id="statIngresos" class="text-2xl font-extrabold text-green-700">$0</h3>
+        </div>
+        <div class="bg-green-50 text-green-600 p-3 rounded-xl text-xl">💰</div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+        <h2 class="text-xl font-bold text-gray-800">Consultas Recientes</h2>
+        
+        <div class="w-full md:w-72">
+          <input type="text" id="inputBuscador" oninput="filtrarDatos()" placeholder="🔍 Buscar cliente o equipo..." class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-2 mb-6 pb-4 border-b">
+        <button onclick="cambiarFiltro('todos')" id="btn-todos" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white transition">Todos</button>
+        <button onclick="cambiarFiltro('modulo')" id="btn-modulo" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition">📱 Módulos</button>
+        <button onclick="cambiarFiltro('bateria')" id="btn-bateria" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition">🔋 Baterías</button>
+        <button onclick="cambiarFiltro('placa')" id="btn-placa" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition">🔌 Placas de Carga</button>
+        <button onclick="cambiarFiltro('otro')" id="btn-otro" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition">💬 Otras Consultas</button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-gray-600 border-collapse">
+          <thead class="bg-gray-50 text-gray-700 uppercase text-xs border-b">
+            <tr>
+              <th class="py-3 px-4">Fecha y Hora</th>
+              <th class="py-3 px-4">Cliente</th>
+              <th class="py-3 px-4">Teléfono</th>
+              <th class="py-3 px-4">Equipo</th>
+              <th class="py-3 px-4">Falla / Servicio</th>
+              <th class="py-3 px-4">Presupuesto</th>
+              <th class="py-3 px-4 text-center">Acción</th>
+            </tr>
+          </thead>
+          <tbody id="tablaCuerpo" class="divide-y divide-gray-100"></tbody>
+        </table>
+      </div>
+
+      <div id="sinDatos" class="hidden text-center py-8 text-gray-400">
+        No hay consultas registradas en Google Sheets.
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const URL_WEB_APP_SHEETS = "https://script.google.com/macros/s/AKfycbwwFDccF0nWLL-sFf-R-YrCH1ceAbNz6031_XdUQX6buwNZgsk9AiOtngZbEF8Gvphr/exec";
+    let listaConsultasGlobal = [];
+    let filtroActivo = "todos";
+
+    async function cargarConsultas() {
+      const tbody = document.getElementById("tablaCuerpo");
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-blue-600 animate-pulse font-semibold">Conectando con Google Sheets...</td></tr>`;
+
+      try {
+        const response = await fetch(URL_WEB_APP_SHEETS, {
+          method: "GET",
+          redirect: "follow"
+        });
+        
+        const textoRespuesta = await response.text();
+        const consultas = JSON.parse(textoRespuesta);
+        
+        listaConsultasGlobal = consultas || [];
+        actualizarEstadisticas(listaConsultasGlobal);
+        filtrarDatos();
+      } catch (err) {
+        console.error("Error al conectar:", err);
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-red-500 font-medium">No se pudo leer Google Sheets. <br><button onclick="cargarConsultas()" class="mt-2 bg-blue-500 text-white px-3 py-1 rounded text-xs">Reintentar</button></td></tr>`;
+      }
+    }
+
+    function actualizarEstadisticas(consultas) {
+      document.getElementById("statTotal").innerText = consultas.length;
+      
+      let sumaTotal = 0;
+      consultas.forEach(c => {
+        let num = parseInt(c.precio ? c.precio.toString().replace(/[^0-9]/g,'') : 0);
+        sumaTotal += num;
+      });
+
+      document.getElementById("statIngresos").innerText = `$${sumaTotal.toLocaleString('es-AR')}`;
+    }
+
+    function cambiarFiltro(tipo) {
+      filtroActivo = tipo;
+      document.querySelectorAll("[id^='btn-']").forEach(btn => {
+        btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition";
+      });
+      document.getElementById(`btn-${tipo}`).className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white transition";
+      filtrarDatos();
+    }
+
+    function filtrarDatos() {
+      const textoBusqueda = document.getElementById("inputBuscador").value.toLowerCase();
+      const tbody = document.getElementById("tablaCuerpo");
+      const sinDatos = document.getElementById("sinDatos");
+
+      const consultasFiltradas = listaConsultasGlobal.filter(c => {
+        const coincideTexto = (c.cliente && c.cliente.toLowerCase().includes(textoBusqueda)) || 
+                              (c.equipo && c.equipo.toLowerCase().includes(textoBusqueda)) ||
+                              (c.telefono && c.telefono.includes(textoBusqueda));
+        
+        let coincideFiltro = true;
+        if (filtroActivo === "modulo") coincideFiltro = c.falla && c.falla.toLowerCase().includes("módulo");
+        if (filtroActivo === "bateria") coincideFiltro = c.falla && c.falla.toLowerCase().includes("batería");
+        if (filtroActivo === "placa") coincideFiltro = c.falla && c.falla.toLowerCase().includes("placa");
+        if (filtroActivo === "otro") coincideFiltro = c.falla && (c.falla.toLowerCase().includes("otra") || c.falla.toLowerCase().includes("consulta"));
+
+        return coincideTexto && coincideFiltro;
+      });
+
+      tbody.innerHTML = "";
+
+      if (consultasFiltradas.length === 0) {
+        sinDatos.classList.remove("hidden");
+        return;
+      }
+
+      sinDatos.classList.add("hidden");
+
+      consultasFiltradas.forEach(c => {
+        const numLimpio = c.telefono ? c.telefono.replace(/[^0-9]/g, '') : '';
+        const waLink = `https://wa.me/${numLimpio}`;
+        const precioMostrar = (c.precio !== "Personalizado" && c.precio !== "No Encontrado") ? `$${Math.round(parseInt(c.precio.toString().replace(/[^0-9]/g,'') || 0)/1000)}mil` : c.precio;
+
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-gray-50 transition";
+        tr.innerHTML = `
+          <td class="py-3 px-4 text-xs text-gray-500">${c.fecha}</td>
+          <td class="py-3 px-4 font-semibold text-gray-800">${c.cliente}</td>
+          <td class="py-3 px-4 text-blue-600 font-mono">${c.telefono}</td>
+          <td class="py-3 px-4 font-medium">${c.equipo}</td>
+          <td class="py-3 px-4"><span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">${c.falla}</span></td>
+          <td class="py-3 px-4 font-bold text-green-700">${precioMostrar}</td>
+          <td class="py-3 px-4 text-center space-x-1">
+            <a href="${waLink}" target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs shadow transition inline-block">💬 Chatear</a>
+            <button onclick='eliminarConsultaFila(${JSON.stringify(c)})' class="bg-red-500 hover:bg-red-600 text-white font-bold px-2 py-1.5 rounded-lg text-xs shadow transition inline-block">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function eliminarConsultaFila(c) {
+      if (!confirm(`¿Eliminar la consulta de ${c.cliente}?`)) return;
+
+      try {
+        navigator.sendBeacon(URL_WEB_APP_SHEETS, JSON.stringify({
+          action: "delete",
+          cliente: c.cliente,
+          telefono: c.telefono,
+          fecha: c.fecha
+        }));
+      } catch (e) {}
+
+      setTimeout(cargarConsultas, 1200);
+    }
+
+    function borrarHistorial() {
+      if (confirm("¿Estás seguro de vaciar todo el panel y borrar los registros del Google Sheet?")) {
+        try {
+          navigator.sendBeacon(URL_WEB_APP_SHEETS, JSON.stringify({ action: "clear_all" }));
+        } catch (e) {}
+        setTimeout(cargarConsultas, 1200);
+      }
+    }
+
+    function exportarCSV() {
+      if (listaConsultasGlobal.length === 0) { alert("No hay datos para exportar."); return; }
+      let csv = "Fecha,Cliente,Telefono,Equipo,Falla,Presupuesto\n";
+      listaConsultasGlobal.forEach(c => {
+        csv += `"${c.fecha}","${c.cliente}","${c.telefono}","${c.equipo}","${c.falla}","${c.precio}"\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `Consultas_TechFix_${new Date().toISOString().slice(0,10)}.csv`;
+      link.click();
+    }
+
+    window.addEventListener('DOMContentLoaded', cargarConsultas);
+  </script>
+</body>
+</html>
