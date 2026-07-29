@@ -3,222 +3,190 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TechFix Vm - Panel Administrador</title>
+  <title>Panel de Control - TechFix Vm</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans min-h-screen">
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
 
-  <header class="bg-gray-900 text-white py-6 px-6 shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
+  <aside class="w-full md:w-64 bg-gray-900 text-white p-6 flex flex-col justify-between">
     <div>
-      <h1 class="text-2xl font-bold">TechFix Vm - Panel de Control</h1>
-      <p class="text-gray-400 text-xs">Sincronizado con Google Sheets en la nube</p>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="bg-blue-600 p-2 rounded-xl text-xl font-bold">⚡</div>
+        <div>
+          <h1 class="font-bold text-lg">TechFix Vm</h1>
+          <p class="text-xs text-gray-400">Panel en la Nube</p>
+        </div>
+      </div>
+      <nav class="space-y-2">
+        <a href="#" class="flex items-center gap-3 bg-blue-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition">📊 Dashboard</a>
+        <button onclick="cargarConsultas()" class="w-full flex items-center gap-3 text-gray-400 hover:bg-gray-800 hover:text-white px-4 py-2.5 rounded-xl text-sm transition text-left">🔄 Sincronizar</button>
+        <button onclick="exportarCSV()" class="w-full flex items-center gap-3 text-gray-400 hover:bg-gray-800 hover:text-white px-4 py-2.5 rounded-xl text-sm transition text-left">📥 Descargar CSV</button>
+      </nav>
     </div>
-    <div class="flex flex-wrap gap-2">
-      <button onclick="cargarConsultas()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition shadow">
-        🔄 Actualizar
-      </button>
-      <button onclick="exportarCSV()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition shadow">
-        📥 Descargar Excel / CSV
-      </button>
-      <button onclick="borrarHistorial()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition shadow">
-        🗑️ Limpiar Historial
-      </button>
+    <div class="pt-6 border-t border-gray-800">
+      <button onclick="borrarHistorial()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-xl text-xs transition">🗑️ Limpiar Todo</button>
     </div>
-  </header>
+  </aside>
 
-  <main class="max-w-6xl mx-auto px-4 py-8">
+  <main class="flex-1 p-6 md:p-10 space-y-8">
     
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <div class="bg-white rounded-2xl shadow-md p-5 border border-gray-200 flex items-center justify-between">
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <h2 class="text-2xl font-extrabold text-gray-900">Control de Consultas 👋</h2>
+        <p class="text-sm text-gray-500">Sincronizado directamente con Google Sheets.</p>
+      </div>
+      <div class="w-full md:w-72">
+        <input type="text" id="buscador" oninput="filtrarTabla()" placeholder="🔍 Buscar cliente o equipo..." class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
+      </div>
+    </header>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 flex items-center justify-between">
         <div>
           <p class="text-xs font-bold text-gray-400 uppercase">Total Consultas</p>
-          <h3 id="statTotal" class="text-2xl font-extrabold text-gray-800">0</h3>
+          <h3 id="statTotal" class="text-3xl font-black text-gray-900 mt-1">0</h3>
         </div>
-        <div class="bg-blue-50 text-blue-600 p-3 rounded-xl text-xl">📋</div>
+        <div class="bg-blue-50 text-blue-600 p-3.5 rounded-2xl text-xl">📋</div>
       </div>
-      <div class="bg-white rounded-2xl shadow-md p-5 border border-gray-200 flex items-center justify-between">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 flex items-center justify-between">
         <div>
-          <p class="text-xs font-bold text-gray-400 uppercase">Presupuesto Estimado en Cartera</p>
-          <h3 id="statIngresos" class="text-2xl font-extrabold text-green-700">$0</h3>
+          <p class="text-xs font-bold text-gray-400 uppercase">Presupuesto en Cartera</p>
+          <h3 id="statIngresos" class="text-3xl font-black text-green-700 mt-1">$0</h3>
         </div>
-        <div class="bg-green-50 text-green-600 p-3 rounded-xl text-xl">💰</div>
+        <div class="bg-green-50 text-green-600 p-3.5 rounded-2xl text-xl">💰</div>
       </div>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
-      <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-        <h2 class="text-xl font-bold text-gray-800">Consultas Recientes</h2>
-        
-        <div class="w-full md:w-72">
-          <input type="text" id="inputBuscador" oninput="filtrarDatos()" placeholder="🔍 Buscar cliente o equipo..." class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-      </div>
-
-      <div class="flex flex-wrap gap-2 mb-6 pb-4 border-b">
-        <button onclick="cambiarFiltro('todos')" id="btn-todos" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white transition">Todos</button>
-        <button onclick="cambiarFiltro('modulo')" id="btn-modulo" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition">📱 Módulos</button>
-        <button onclick="cambiarFiltro('bateria')" id="btn-bateria" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition">🔋 Baterías</button>
-        <button onclick="cambiarFiltro('placa')" id="btn-placa" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition">🔌 Placas de Carga</button>
-        <button onclick="cambiarFiltro('otro')" id="btn-otro" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition">💬 Otras Consultas</button>
-      </div>
-
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+      <h3 class="text-lg font-bold text-gray-900 mb-6">Listado de Ingresos Recientes</h3>
+      
       <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm text-gray-600 border-collapse">
-          <thead class="bg-gray-50 text-gray-700 uppercase text-xs border-b">
+        <table class="w-full text-left text-sm text-gray-600">
+          <thead class="bg-gray-50 uppercase text-xs text-gray-500 border-b">
             <tr>
-              <th class="py-3 px-4">Fecha y Hora</th>
+              <th class="py-3 px-4">Fecha</th>
               <th class="py-3 px-4">Cliente</th>
               <th class="py-3 px-4">Teléfono</th>
               <th class="py-3 px-4">Equipo</th>
-              <th class="py-3 px-4">Falla / Servicio</th>
+              <th class="py-3 px-4">Servicio / Falla</th>
               <th class="py-3 px-4">Presupuesto</th>
               <th class="py-3 px-4 text-center">Acción</th>
             </tr>
           </thead>
-          <tbody id="tablaCuerpo" class="divide-y divide-gray-100"></tbody>
+          <tbody id="tablaCuerpo" class="divide-y divide-gray-100">
+            <tr><td colspan="7" class="text-center py-6 text-blue-600 font-semibold animate-pulse">Conectando con Google Sheets...</td></tr>
+          </tbody>
         </table>
       </div>
-
-      <div id="sinDatos" class="hidden text-center py-8 text-gray-400">
-        No hay consultas registradas en Google Sheets.
-      </div>
+      <div id="sinDatos" class="hidden text-center py-8 text-gray-400">No hay consultas registradas en Google Sheets.</div>
     </div>
+
   </main>
 
   <script>
-    const URL_WEB_APP_SHEETS = "https://script.google.com/macros/s/AKfycbxvCdz2pmHTYVmZ4B2oy0Z3BFOIvzIvI9FPN4TDcouoHZZGwFinsmiS-gpWVIvBjNXo/exec";
-    let listaConsultasGlobal = [];
-    let filtroActivo = "todos";
+    const URL_WEB_APP = "https://script.google.com/macros/s/AKfycbymTI-bPSNgBUXAqKMLfJlWtw4PDjc_Xc7qG5-rnoE-gRLW_wct4aYlNkJQPy3OONpo/exec";
+    let dataGlobal = [];
 
-    async function cargarConsultas() {
+    function cargarConsultas() {
       const tbody = document.getElementById("tablaCuerpo");
-      tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-blue-600 animate-pulse font-semibold">Sincronizando con Google Sheets...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-blue-600 font-semibold animate-pulse">Sincronizando con Google Sheets...</td></tr>`;
 
-      try {
-        // Usamos un servicio proxy optimizado para saltar el bloqueo CORS del navegador
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(URL_WEB_APP_SHEETS)}`;
-        const response = await fetch(proxyUrl);
-        const data = await response.json();
-        
-        listaConsultasGlobal = Array.isArray(data) ? data : [];
-        actualizarEstadisticas(listaConsultasGlobal);
-        filtrarDatos();
-      } catch (err) {
-        console.error("Error al conectar:", err);
-        // Respaldo automático con localStorage si hay problemas de red puntuales
-        let locales = JSON.parse(localStorage.getItem('techfix_consultas')) || [];
-        listaConsultasGlobal = locales;
-        actualizarEstadisticas(listaConsultasGlobal);
-        filtrarDatos();
-      }
-    }
+      // Eliminamos cualquier script anterior para evitar duplicados
+      const scriptViejo = document.getElementById("jsonpScript");
+      if (scriptViejo) scriptViejo.remove();
 
-    function actualizarEstadisticas(consultas) {
-      document.getElementById("statTotal").innerText = consultas.length;
+      // Creamos una etiqueta script para solicitar los datos nativamente a Google
+      const script = document.createElement("script");
+      script.id = "jsonpScript";
+      script.src = `${URL_WEB_APP}?callback=procesarDatosGoogle`;
       
-      let sumaTotal = 0;
-      consultas.forEach(c => {
-        let num = parseInt(c.precio ? c.precio.toString().replace(/[^0-9]/g,'') : 0);
-        sumaTotal += num;
-      });
+      script.onerror = function() {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-red-500 font-medium">Error al conectar con Google Sheets.</td></tr>`;
+      };
 
-      document.getElementById("statIngresos").innerText = `$${sumaTotal.toLocaleString('es-AR')}`;
+      document.body.appendChild(script);
     }
 
-    function cambiarFiltro(tipo) {
-      filtroActivo = tipo;
-      document.querySelectorAll("[id^='btn-']").forEach(btn => {
-        btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition";
+    // Esta función recibe automáticamente los datos directo desde Google Sheets
+    window.procesarDatosGoogle = function(datos) {
+      dataGlobal = Array.isArray(datos) ? datos : [];
+      actualizarEstadisticas(dataGlobal);
+      renderizarTabla(dataGlobal);
+    };
+
+    function actualizarEstadisticas(datos) {
+      document.getElementById("statTotal").innerText = datos.length;
+      let suma = 0;
+      datos.forEach(item => {
+        let num = parseInt(item.precio ? item.precio.toString().replace(/[^0-9]/g, '') : 0);
+        suma += num;
       });
-      document.getElementById(`btn-${tipo}`).className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white transition";
-      filtrarDatos();
+      document.getElementById("statIngresos").innerText = `$${suma.toLocaleString('es-AR')}`;
     }
 
-    function filtrarDatos() {
-      const textoBusqueda = document.getElementById("inputBuscador").value.toLowerCase();
+    function renderizarTabla(datos) {
       const tbody = document.getElementById("tablaCuerpo");
       const sinDatos = document.getElementById("sinDatos");
-
-      const consultasFiltradas = listaConsultasGlobal.filter(c => {
-        const coincideTexto = (c.cliente && c.cliente.toLowerCase().includes(textoBusqueda)) || 
-                              (c.equipo && c.equipo.toLowerCase().includes(textoBusqueda)) ||
-                              (c.telefono && c.telefono.includes(textoBusqueda));
-        
-        let coincideFiltro = true;
-        if (filtroActivo === "modulo") coincideFiltro = c.falla && c.falla.toLowerCase().includes("módulo");
-        if (filtroActivo === "bateria") coincideFiltro = c.falla && c.falla.toLowerCase().includes("batería");
-        if (filtroActivo === "placa") coincideFiltro = c.falla && c.falla.toLowerCase().includes("placa");
-        if (filtroActivo === "otro") coincideFiltro = c.falla && (c.falla.toLowerCase().includes("otra") || c.falla.toLowerCase().includes("consulta"));
-
-        return coincideTexto && coincideFiltro;
-      });
-
       tbody.innerHTML = "";
 
-      if (consultasFiltradas.length === 0) {
+      if (datos.length === 0) {
         sinDatos.classList.remove("hidden");
         return;
       }
-
       sinDatos.classList.add("hidden");
 
-      consultasFiltradas.forEach((c, index) => {
-        const numLimpio = c.telefono ? c.telefono.replace(/[^0-9]/g, '') : '';
-        const waLink = `https://wa.me/${numLimpio}`;
-        const precioMostrar = (c.precio !== "Personalizado" && c.precio !== "No Encontrado") ? `$${Math.round(parseInt(c.precio.toString().replace(/[^0-9]/g,'') || 0)/1000)}mil` : c.precio;
+      datos.forEach(item => {
+        let telLimpio = item.telefono ? item.telefono.replace(/[^0-9]/g, '') : '';
+        let waLink = `https://wa.me/${telLimpio}`;
+        let precioTxt = (item.precio && item.precio !== "Personalizado") ? `$${item.precio}` : item.precio;
 
-        const tr = document.createElement("tr");
+        let tr = document.createElement("tr");
         tr.className = "hover:bg-gray-50 transition";
         tr.innerHTML = `
-          <td class="py-3 px-4 text-xs text-gray-500">${c.fecha || '-'}</td>
-          <td class="py-3 px-4 font-semibold text-gray-800">${c.cliente || '-'}</td>
-          <td class="py-3 px-4 text-blue-600 font-mono">${c.telefono || '-'}</td>
-          <td class="py-3 px-4 font-medium">${c.equipo || '-'}</td>
-          <td class="py-3 px-4"><span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">${c.falla || '-'}</span></td>
-          <td class="py-3 px-4 font-bold text-green-700">${precioMostrar || '-'}</td>
-          <td class="py-3 px-4 text-center space-x-1">
-            <a href="${waLink}" target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs shadow transition inline-block">💬 Chatear</a>
-            <button onclick='eliminarConsultaFila(${JSON.stringify(c)})' class="bg-red-500 hover:bg-red-600 text-white font-bold px-2 py-1.5 rounded-lg text-xs shadow transition inline-block">🗑️</button>
+          <td class="py-3 px-4 text-xs text-gray-500">${item.fecha || '-'}</td>
+          <td class="py-3 px-4 font-semibold text-gray-900">${item.cliente || '-'}</td>
+          <td class="py-3 px-4 text-blue-600 font-mono">${item.telefono || '-'}</td>
+          <td class="py-3 px-4 font-medium">${item.equipo || '-'}</td>
+          <td class="py-3 px-4"><span class="bg-gray-100 text-gray-700 px-2.5 py-1 rounded-md text-xs">${item.falla || '-'}</span></td>
+          <td class="py-3 px-4 font-bold text-green-700">${precioTxt || '-'}</td>
+          <td class="py-3 px-4 text-center">
+            <a href="${waLink}" target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow transition inline-block">💬 Chatear</a>
           </td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    function eliminarConsultaFila(c) {
-      if (!confirm(`¿Eliminar la consulta de ${c.cliente}?`)) return;
-
-      try {
-        navigator.sendBeacon(URL_WEB_APP_SHEETS, JSON.stringify({
-          action: "delete",
-          cliente: c.cliente,
-          telefono: c.telefono,
-          fecha: c.fecha
-        }));
-      } catch (e) {}
-
-      setTimeout(cargarConsultas, 1200);
+    function filtrarTabla() {
+      let texto = document.getElementById("buscador").value.toLowerCase();
+      let filtrados = dataGlobal.filter(item => {
+        let cli = item.cliente ? item.cliente.toLowerCase() : '';
+        let eq = item.equipo ? item.equipo.toLowerCase() : '';
+        let tel = item.telefono ? item.telefono.toLowerCase() : '';
+        return cli.includes(texto) || eq.includes(texto) || tel.includes(texto);
+      });
+      renderizarTabla(filtrados);
     }
 
     function borrarHistorial() {
-      if (confirm("¿Estás seguro de vaciar todo el panel y borrar los registros del Google Sheet?")) {
+      if (confirm("¿Seguro que deseas vaciar los registros de Google Sheets?")) {
         try {
-          navigator.sendBeacon(URL_WEB_APP_SHEETS, JSON.stringify({ action: "clear_all" }));
-        } catch (e) {}
-        setTimeout(cargarConsultas, 1200);
+          navigator.sendBeacon(URL_WEB_APP, JSON.stringify({ action: "clear_all" }));
+        } catch(e) {}
+        setTimeout(cargarConsultas, 1500);
       }
     }
 
     function exportarCSV() {
-      if (listaConsultasGlobal.length === 0) { alert("No hay datos para exportar."); return; }
-      let csv = "Fecha,Cliente,Telefono,Equipo,Falla,Presupuesto\n";
-      listaConsultasGlobal.forEach(c => {
-        csv += `"${c.fecha}","${c.cliente}","${c.telefono}","${c.equipo}","${c.falla}","${c.precio}"\n`;
+      if (dataGlobal.length === 0) { alert("No hay datos para exportar."); return; }
+      let csv = "Fecha,Cliente,Telefono,Equipo,Falla,Precio\n";
+      dataGlobal.forEach(i => {
+        csv += `"${i.fecha}","${i.cliente}","${i.telefono}","${i.equipo}","${i.falla}","${i.precio}"\n`;
       });
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
+      let blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      let link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = `Consultas_TechFix_${new Date().toISOString().slice(0,10)}.csv`;
+      link.download = `TechFix_Consultas_${new Date().toISOString().slice(0,10)}.csv`;
       link.click();
     }
 
