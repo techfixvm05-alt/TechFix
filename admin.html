@@ -1,1 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Fix - Panel de Consultas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+<style>
+  :root{
+    --tf-blue:#007BFF;
+    --tf-blue-light:#00A8FF;
+    --tf-blue-dark:#0D47A1;
+    --tf-black:#0A0A0A;
+    --tf-gray:#1B1B1B;
+    --tf-white:#FFFFFF;
+    --tf-amber:#F5A623;
+    --tf-text-dim:#9BA3AF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--tf-black);
+    color:var(--tf-white);
+    font-family:'Montserrat',sans-serif;
+    min-height:100vh;
+  }
+  .display{font-family:'Bebas Neue',sans-serif; letter-spacing:0.02em;}
 
+  /* ---- gate de acceso ---- */
+  #gate{
+    position:fixed; inset:0; z-index:100;
+    background:var(--tf-black);
+    display:flex; align-items:center; justify-content:center;
+    padding:1.25rem;
+  }
+  #gate.hidden{display:none;}
+  .gate-box{
+    width:100%; max-width:340px;
+    background:var(--tf-gray);
+    border:1px solid rgba(0,123,255,0.3);
+    border-radius:18px;
+    padding:1.75rem 1.5rem;
+    text-align:center;
+  }
+  .gate-box h1{font-size:1.7rem; margin:0.5rem 0 0.25rem;}
+  .gate-box p{font-size:12.5px; color:var(--tf-text-dim); margin:0 0 1.25rem;}
+  .gate-box input{
+    width:100%;
+    background:#101010;
+    border:1px solid #333;
+    color:var(--tf-white);
+    border-radius:12px;
+    padding:13px 14px;
+    min-height:48px;
+    font-size:16px;
+    text-align:center;
+    letter-spacing:0.15em;
+  }
+  .gate-box input:focus{outline:none; border-color:var(--tf-blue-light); box-shadow:0 0 0 3px rgba(0,168,255,0.25);}
+  .gate-box button{
+    width:100%; margin-top:12px;
+    background:linear-gradient(135deg, var(--tf-blue), var(--tf-blue-dark));
+    border:none; color:#fff; font-weight:700; font-size:14px;
+    padding:13px; border-radius:12px; cursor:pointer; min-height:48px;
+  }
+  .gate-error{color:var(--tf-amber); font-size:12px; margin-top:10px; display:none;}
+
+  /* ---- panel ---- */
+  #panel{display:none;}
+  #panel.visible{display:block;}
+  header.top{
+    padding:1.25rem 1.25rem 1rem;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:9px;}
+  .brand svg{width:26px; height:26px;}
+  .brand span{font-weight:700; font-size:15px;}
+  .brand span b{color:var(--tf-blue-light);}
+  .btn-refresh{
+    display:inline-flex; align-items:center; gap:6px;
+    background:transparent; border:1px solid rgba(255,255,255,0.15);
+    color:var(--tf-text-dim); font-size:12.5px; font-weight:600;
+    padding:9px 14px; border-radius:10px; cursor:pointer;
+  }
+  .btn-refresh:hover{border-color:rgba(0,123,255,0.4); color:#fff;}
+  .btn-refresh svg{width:14px; height:14px;}
+  .btn-refresh.loading svg{animation:spin 0.8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  main{max-width:760px; margin:0 auto; padding:1.5rem 1.25rem 3rem;}
+
+  .stats{display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin-bottom:1.25rem;}
+  .stat{background:var(--tf-gray); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:14px 16px;}
+  .stat p.n{font-family:'Bebas Neue',sans-serif; font-size:2rem; margin:0;}
+  .stat p.l{font-size:11px; color:var(--tf-text-dim); margin:2px 0 0; text-transform:uppercase; letter-spacing:0.08em;}
+
+  .search-row input{
+    width:100%;
+    background:#101010; border:1px solid #333; color:#fff;
+    border-radius:12px; padding:12px 14px; min-height:46px; font-size:15px;
+    margin-bottom:1.25rem;
+  }
+  .search-row input:focus{outline:none; border-color:var(--tf-blue-light); box-shadow:0 0 0 3px rgba(0,168,255,0.25);}
+  .search-row input::placeholder{color:#6b6b6b;}
+
+  #estado{font-size:12px; color:var(--tf-text-dim); text-align:center; padding:1rem 0;}
+  #estado.err{color:var(--tf-amber);}
+
+  .fila{
+    background:var(--tf-gray);
+    border:1px solid rgba(255,255,255,0.07);
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:10px;
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .fila-top{display:flex; justify-content:space-between; align-items:baseline; gap:10px;}
+  .fila-cliente{font-weight:700; font-size:14.5px;}
+  .fila-fecha{font-size:11px; color:var(--tf-text-dim); white-space:nowrap;}
+  .fila-equipo{font-size:13.5px; color:#e4e4e4;}
+  .fila-bottom{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:4px;}
+  .fila-falla{font-size:11.5px; color:var(--tf-blue-light); font-weight:600;}
+  .fila-precio{font-family:'Bebas Neue',sans-serif; font-size:1.3rem;}
+  .fila-wa{
+    display:inline-flex; align-items:center; gap:5px;
+    background:var(--tf-blue); color:#fff; font-weight:700; font-size:11.5px;
+    padding:8px 12px; border-radius:9px; text-decoration:none; white-space:nowrap;
+  }
+  .fila-wa svg{width:13px; height:13px;}
+
+  .empty-state{
+    text-align:center; padding:3rem 1rem; color:var(--tf-text-dim);
+  }
+  .empty-state svg{width:36px; height:36px; margin-bottom:10px; opacity:0.5;}
+  .empty-state p{font-size:13px; margin:0;}
+
+  .config-note{
+    max-width:760px; margin:0 auto; padding:0 1.25rem 2rem;
+    font-size:11.5px; color:var(--tf-text-dim); text-align:center; line-height:1.6;
+  }
+</style>
+</head>
+<body>
+
+  <div id="gate">
+    <div class="gate-box">
+      <svg viewBox="0 0 40 40" width="34" height="34" style="margin:0 auto;" aria-hidden="true">
+        <path d="M6 4 L34 4 L34 12 L18 12 L18 18 L28 18 L28 26 L18 26 L18 36 L6 36 Z" fill="#00A8FF"/>
+      </svg>
+      <h1 class="display">Panel de consultas</h1>
+      <p>Ingres&aacute; el c&oacute;digo de acceso para ver las cotizaciones recibidas.</p>
+      <input type="password" id="inputCodigo" placeholder="C&oacute;digo de acceso" autocomplete="off">
+      <button onclick="validarAcceso()">Entrar</button>
+      <p class="gate-error" id="gateError">C&oacute;digo incorrecto, intent&aacute; de nuevo.</p>
+    </div>
+  </div>
+
+  <div id="panel">
+    <header class="top">
+      <div class="brand">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 4 L34 4 L34 12 L18 12 L18 18 L28 18 L28 26 L18 26 L18 36 L6 36 Z" fill="#00A8FF"/></svg>
+        <span>TECH <b>FIX</b> &middot; Consultas</span>
+      </div>
+      <button class="btn-refresh" id="btnRefresh" onclick="cargarConsultas()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg>
+        Actualizar
+      </button>
+    </header>
+
+    <main>
+      <div class="stats">
+        <div class="stat"><p class="n display" id="statTotal">0</p><p class="l">Consultas totales</p></div>
+        <div class="stat"><p class="n display" id="statHoy">0</p><p class="l">Consultas de hoy</p></div>
+      </div>
+
+      <div class="search-row">
+        <input type="text" id="inputBuscar" placeholder="Buscar por cliente, equipo o tel&eacute;fono..." oninput="renderLista()">
+      </div>
+
+      <div id="estado">Cargando consultas...</div>
+      <div id="lista"></div>
+    </main>
+
+    <p class="config-note">Los datos se leen en vivo desde la hoja de consultas de Google Sheets.</p>
+  </div>
+
+<script>
+  // -----------------------------------------------------------------
+  // CONFIGURACI\u00d3N: complet\u00e1 estos dos valores antes de usar el panel.
+  // -----------------------------------------------------------------
+  const CODIGO_ACCESO = "techfix2026";
+
+  // URL de la hoja de C\u00f3lculo donde el Apps Script del cotizador guarda
+  // cada consulta, publicada como CSV (Archivo > Compartir > Publicar
+  // en la web > eleg\u00ed esa hoja espec\u00edfica > formato CSV).
+  const URL_CSV_CONSULTAS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSjUf3sv0MjaNYEeX-1j5Vats3KSY8gBpo1HpNwZq4CH2CYa9JK9GThzs3rk5_W5csMKm-AEYeb2Pex/pub?output=csv";
+  // -----------------------------------------------------------------
+
+  let consultas = [];
+
+  function validarAcceso(){
+    const valor = document.getElementById("inputCodigo").value.trim();
+    const error = document.getElementById("gateError");
+    if (valor === CODIGO_ACCESO) {
+      document.getElementById("gate").classList.add("hidden");
+      document.getElementById("panel").classList.add("visible");
+      cargarConsultas();
+    } else {
+      error.style.display = "block";
+    }
+  }
+  document.getElementById("inputCodigo").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") validarAcceso();
+  });
+
+  function normalizarTexto(txt){
+    if (!txt) return '';
+    return txt.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+  }
+
+  function parseFechaAR(str){
+    if (!str) return null;
+    const partes = str.split(',');
+    const fecha = (partes[0] || '').trim().split('/');
+    if (fecha.length < 3) return null;
+    const [d, m, y] = fecha.map(n => parseInt(n, 10));
+    const horaPartes = (partes[1] || '').trim().split(':').map(n => parseInt(n, 10));
+    return new Date(y, (m || 1) - 1, d || 1, horaPartes[0] || 0, horaPartes[1] || 0, horaPartes[2] || 0);
+  }
+
+  function esHoy(fecha){
+    if (!fecha) return false;
+    const hoy = new Date();
+    return fecha.getFullYear() === hoy.getFullYear() && fecha.getMonth() === hoy.getMonth() && fecha.getDate() === hoy.getDate();
+  }
+
+  async function cargarConsultas(){
+    const estado = document.getElementById("estado");
+    const btn = document.getElementById("btnRefresh");
+    btn.classList.add("loading");
+    estado.className = "";
+    estado.textContent = "Cargando consultas...";
+
+    if (!URL_CSV_CONSULTAS || URL_CSV_CONSULTAS.includes("PEGAR_AQUI")) {
+      estado.className = "err";
+      estado.textContent = "Falta configurar la URL del CSV de consultas en el c\u00f3digo (constante URL_CSV_CONSULTAS).";
+      btn.classList.remove("loading");
+      return;
+    }
+
+    try {
+      const response = await fetch(URL_CSV_CONSULTAS);
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const csvText = await response.text();
+      Papa.parse(csvText, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results){
+          consultas = results.data.map(row => {
+            const keys = Object.keys(row);
+            const get = (nombre) => {
+              const k = keys.find(k => normalizarTexto(k) === nombre);
+              return k ? (row[k] || '').toString().trim() : '';
+            };
+            const fechaTxt = get('fecha');
+            return {
+              fecha: fechaTxt,
+              fechaObj: parseFechaAR(fechaTxt),
+              cliente: get('cliente'),
+              telefono: get('telefono'),
+              equipo: get('equipo'),
+              falla: get('falla'),
+              precio: get('precio')
+            };
+          }).reverse();
+          estado.textContent = "";
+          renderLista();
+        },
+        error: function(){
+          estado.className = "err";
+          estado.textContent = "No se pudo leer el archivo CSV.";
+        }
+      });
+    } catch (error) {
+      estado.className = "err";
+      estado.textContent = "No se pudo conectar con Google Sheets. Verific\u00e1 tu conexi\u00f3n o la URL configurada.";
+      console.error(error);
+    } finally {
+      btn.classList.remove("loading");
+    }
+  }
+
+  function renderLista(){
+    const filtro = normalizarTexto(document.getElementById("inputBuscar").value);
+    const lista = document.getElementById("lista");
+    const filtradas = filtro
+      ? consultas.filter(c => normalizarTexto(`${c.cliente} ${c.equipo} ${c.telefono} ${c.falla}`).includes(filtro))
+      : consultas;
+
+    document.getElementById("statTotal").textContent = consultas.length;
+    document.getElementById("statHoy").textContent = consultas.filter(c => esHoy(c.fechaObj)).length;
+
+    if (filtradas.length === 0) {
+      lista.innerHTML = `
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+          <p>${consultas.length === 0 ? 'Todav\u00eda no hay consultas registradas.' : 'No encontramos resultados para esa b\u00fasqueda.'}</p>
+        </div>`;
+      return;
+    }
+
+    lista.innerHTML = filtradas.map(c => `
+      <div class="fila">
+        <div class="fila-top">
+          <span class="fila-cliente">${escapeHtml(c.cliente || 'Sin nombre')}</span>
+          <span class="fila-fecha">${escapeHtml(c.fecha || '')}</span>
+        </div>
+        <div class="fila-equipo">${escapeHtml(c.equipo || '-')}</div>
+        <div class="fila-bottom">
+          <div>
+            <span class="fila-falla">${escapeHtml(c.falla || '-')}</span>
+            <span class="fila-precio"> &middot; ${escapeHtml(c.precio || 'Consultar')}</span>
+          </div>
+          ${c.telefono ? `<a class="fila-wa" href="https://wa.me/${soloDigitos(c.telefono)}" target="_blank" rel="noopener">${iconoWA()}${escapeHtml(c.telefono)}</a>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function soloDigitos(tel){ return tel.toString().replace(/[^0-9]/g, ''); }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function iconoWA(){
+    return '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.8 14.2c-.2.6-1.4 1.2-2 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-5-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.9 1.4 1.9 2.3 1.3 1.1 2.3 1.5 2.7 1.7.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1l1.7.8c.2.1.4.2.4.3.1.2.1.9-.1 1.5z"/></svg>';
+  }
+</script>
+</body>
+</html>
