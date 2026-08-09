@@ -3,40 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tech Fix - Cotizador On-Line</title>
-<meta name="description" content="Cotizá la reparación de tu celular al instante. Pantallas, baterías y placas de carga, con garantía. Tech Fix, Villa María, Córdoba.">
+<title>Pol&iacute;ticas de Reparaci&oacute;n - Tech Fix</title>
+<meta name="description" content="Conoc&eacute; c&oacute;mo trabajamos en Tech Fix: tiempos de reparaci&oacute;n, garant&iacute;a, calidad de repuestos y qu&eacute; necesitamos de vos.">
 <meta name="theme-color" content="#0A0A0A">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%230A0A0A'/%3E%3Cpath d='M9 7 L31 7 L31 13 L17 13 L17 17 L27 17 L27 23 L17 23 L17 33 L9 33 Z' fill='%2300A8FF'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "Tech Fix",
-  "description": "Servicio técnico de reparación de celulares: pantallas, baterías y placas de carga, con garantía.",
-  "telephone": "+5493534132871",
-  "priceRange": "$$",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Villa María",
-    "addressRegion": "Córdoba",
-    "addressCountry": "AR"
-  },
-  "areaServed": "Villa María, Córdoba",
-  "makesOffer": [
-    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Reparación de pantalla / módulo" } },
-    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Cambio de batería" } },
-    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Reparación de placa de carga" } }
-  ]
-}
-</script>
-<!-- Cuando tengas dominio propio y dirección exacta, completá "url", "address.streetAddress",
-     "address.postalCode" y "openingHoursSpecification" acá arriba para mejorar el SEO local. -->
 <style>
   :root{
     --tf-blue:#007BFF;
@@ -49,486 +22,109 @@
     --tf-text-dim:#9BA3AF;
   }
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
   body{
     margin:0;
     background:var(--tf-black);
     color:var(--tf-white);
     font-family:'Montserrat',sans-serif;
     min-height:100vh;
-    display:flex;
-    flex-direction:column;
-  }
-  .eyebrow{
-    font-family:'Montserrat',sans-serif;
-    font-weight:600;
-    font-size:11px;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    color:var(--tf-blue-light);
-  }
-  .display{
-    font-family:'Bebas Neue',sans-serif;
-    letter-spacing:0.02em;
-    line-height:1;
   }
 
-  /* ---------- HERO ---------- */
-  .hero{
-    position:relative;
-    overflow:hidden;
-    padding:2rem 1.25rem 2.25rem;
-    background:
-      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(0,123,255,0.30), transparent 60%),
-      linear-gradient(180deg, var(--tf-black) 0%, #050505 100%);
-    border-bottom:1px solid rgba(0,123,255,0.25);
-  }
-  .circuit{
-    position:absolute;
-    inset:0;
-    opacity:0.35;
-    pointer-events:none;
-  }
-  .hero-inner{
-    position:relative;
-    max-width:640px;
-    margin:0 auto;
-    text-align:center;
-  }
-  .logo-row{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    margin-bottom:1.75rem;
-  }
-  .logo-mark{
-    width:38px;
-    height:38px;
-    flex-shrink:0;
-  }
-  .logo-word{
-    font-family:'Montserrat',sans-serif;
-    font-weight:700;
-    font-size:19px;
-    letter-spacing:0.02em;
-  }
-  .logo-word span{color:var(--tf-blue-light);}
-  .logo-sub{
-    font-size:9px;
-    letter-spacing:0.22em;
-    color:var(--tf-text-dim);
-    text-transform:uppercase;
-    display:block;
-    margin-top:1px;
-  }
-
-  .crack-wrap{
-    position:relative;
-    width:min(190px, 48vw);
-    aspect-ratio:9/16;
-    margin:0 auto 1.25rem;
-  }
-  .phone-body{
-    position:absolute;
-    inset:0;
-    border-radius:34px;
-    background:linear-gradient(155deg,#141414,#050505);
-    border:2px solid #232323;
-    box-shadow:0 0 0 1px rgba(0,123,255,0.15), 0 20px 60px -20px rgba(0,123,255,0.55);
-  }
-  .phone-screen{
-    position:absolute;
-    inset:10px;
-    border-radius:24px;
-    background:linear-gradient(155deg, var(--tf-blue-dark), #041226 70%);
-    overflow:hidden;
-  }
-  .phone-glow{
-    position:absolute;
-    inset:0;
-    background:radial-gradient(circle at 30% 20%, rgba(0,168,255,0.55), transparent 55%);
-  }
-  .crack-svg{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-  }
-  .crack-svg path{
-    fill:none;
-    stroke:#FFFFFF;
-    stroke-width:1.4;
-    stroke-linecap:round;
-    stroke-dasharray:220;
-    stroke-dashoffset:220;
-    animation:draw 1.1s ease-out forwards, healfade 1.6s ease-in forwards;
-    animation-delay:0.15s, 1.5s;
-    opacity:0.9;
-  }
-  @keyframes draw{to{stroke-dashoffset:0;}}
-  @keyframes healfade{to{opacity:0;}}
-  @media (prefers-reduced-motion: reduce){
-    .crack-svg path{animation:none; opacity:0;}
-  }
-
-  h1.hero-title{
-    font-size:clamp(2.1rem, 7vw, 3rem);
-    margin:0 0 0.6rem;
-  }
-  h1.hero-title .accent{color:var(--tf-blue-light);}
-  .hero-sub{
-    color:var(--tf-text-dim);
-    font-size:14px;
-    line-height:1.6;
-    max-width:420px;
-    margin:0 auto 1.75rem;
-  }
-  .trust-row{
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    flex-wrap:wrap;
-  }
-  .trust-chip{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    background:rgba(255,255,255,0.04);
-    border:1px solid rgba(0,123,255,0.3);
-    border-radius:999px;
-    padding:6px 13px;
-    font-size:11px;
-    font-weight:600;
-    letter-spacing:0.02em;
-  }
-  .trust-chip svg{width:14px; height:14px; flex-shrink:0;}
-
-  /* ---------- MAIN ---------- */
-  main{
-    flex:1;
-    max-width:560px;
-    width:100%;
-    margin:0 auto;
-    padding:2.25rem 1.25rem 1rem;
-  }
-  .card{
-    background:linear-gradient(180deg, var(--tf-gray) 0%, #131313 100%);
-    border:1px solid rgba(0,123,255,0.22);
-    border-radius:20px;
-    padding:1.75rem 1.5rem;
-    box-shadow:0 0 0 1px rgba(0,0,0,0.4), 0 30px 60px -30px rgba(0,123,255,0.35);
-  }
-  .card-head{
-    text-align:center;
-    margin-bottom:1.5rem;
-    padding-bottom:1.25rem;
+  .topbar{
+    padding:1.25rem 1.25rem 1rem;
     border-bottom:1px solid rgba(255,255,255,0.08);
+    background:linear-gradient(180deg, var(--tf-black), #050505);
   }
-  .card-head h2{
-    font-family:'Bebas Neue',sans-serif;
-    font-size:1.9rem;
-    margin:0.3rem 0 0;
-    letter-spacing:0.02em;
+  .topbar-inner{
+    max-width:640px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
   }
-  #estadoCarga{
-    font-size:11px;
-    font-weight:600;
-    text-align:center;
-    padding:9px 12px;
-    border-radius:10px;
-    margin-bottom:1.25rem;
-    background:rgba(0,123,255,0.1);
-    color:var(--tf-blue-light);
-    border:1px solid rgba(0,123,255,0.25);
-    transition:all 0.3s ease;
-  }
-  #estadoCarga.ok{
-    background:rgba(0,168,255,0.1);
-    color:#5fd0ff;
-    border-color:rgba(0,168,255,0.3);
-  }
-  #estadoCarga.err{
-    background:rgba(245,166,35,0.1);
-    color:var(--tf-amber);
-    border-color:rgba(245,166,35,0.3);
-  }
-  .pulse{animation:pulse 1.4s ease-in-out infinite;}
-  @keyframes pulse{50%{opacity:0.55;}}
-
-  .field label{
-    display:block;
-    font-weight:600;
-    font-size:12.5px;
-    margin-bottom:6px;
-    color:var(--tf-white);
-  }
-  .field label b{color:var(--tf-blue-light); font-weight:700;}
-  .field{margin-bottom:1.15rem; position:relative;}
-  .field input, .field select{
-    width:100%;
-    background:#101010;
-    border:1px solid #333;
-    color:var(--tf-white);
-    border-radius:12px;
-    padding:13px 14px;
-    min-height:48px;
-    font-family:'Montserrat',sans-serif;
-    font-size:16px;
-    transition:border-color 0.15s ease, box-shadow 0.15s ease;
-  }
-  .field input::placeholder{color:#6b6b6b;}
-  .field input:focus, .field select:focus{
-    outline:none;
-    border-color:var(--tf-blue-light);
-    box-shadow:0 0 0 3px rgba(0,168,255,0.25);
-  }
-  .field input:disabled{opacity:0.5; cursor:not-allowed;}
-  .combo-list{
-    list-style:none;
-    margin:6px 0 0;
-    padding:6px;
-    position:absolute;
-    left:0; right:0; top:100%;
-    z-index:20;
-    max-height:220px;
-    overflow-y:auto;
-    background:#141414;
-    border:1px solid rgba(0,168,255,0.35);
-    border-radius:12px;
-    box-shadow:0 20px 40px -12px rgba(0,0,0,0.6);
-    display:none;
-  }
-  .combo-list.open{display:block;}
-  .combo-list li{
-    padding:11px 12px;
-    font-size:14.5px;
-    border-radius:8px;
-    cursor:pointer;
-  }
-  .combo-list li.active, .combo-list li:hover{background:rgba(0,123,255,0.22); color:var(--tf-white);}
-  .combo-list li.empty{color:var(--tf-text-dim); cursor:default;}
-  .combo-list li.empty:hover{background:none;}
-  .field select{appearance:none;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300A8FF' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;
-    background-position:right 14px center;
-    padding-right:36px;
-  }
-  .hint{font-size:11px; color:var(--tf-text-dim); margin-top:5px;}
-
-  .btn-main{
-    width:100%;
-    background:linear-gradient(135deg, var(--tf-blue) 0%, var(--tf-blue-dark) 100%);
-    color:var(--tf-white);
-    border:none;
-    border-radius:14px;
-    padding:15px;
-    font-family:'Montserrat',sans-serif;
-    font-weight:700;
-    font-size:14.5px;
-    letter-spacing:0.01em;
-    cursor:pointer;
-    transition:transform 0.12s ease, box-shadow 0.2s ease;
-    box-shadow:0 10px 25px -10px rgba(0,123,255,0.6);
-  }
-  .btn-main:hover{box-shadow:0 14px 30px -8px rgba(0,123,255,0.75);}
-  .btn-main:active{transform:scale(0.98);}
-  .btn-main:disabled{opacity:0.6; cursor:default; transform:none;}
-
-  .btn-wa{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    background:var(--tf-blue);
-    color:var(--tf-white);
-    font-weight:700;
-    font-size:13.5px;
-    padding:13px 22px;
-    border-radius:12px;
-    border:none;
-    cursor:pointer;
-    box-shadow:0 10px 22px -10px rgba(0,123,255,0.7);
-    transition:transform 0.12s ease;
-  }
-  .btn-wa:hover{transform:translateY(-1px);}
-  .btn-wa svg{width:17px; height:17px;}
-
-  .btn-ghost{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    background:transparent;
-    color:var(--tf-text-dim);
-    font-weight:600;
-    font-size:12px;
-    padding:10px 14px;
-    border-radius:10px;
+  .brand{display:flex; align-items:center; gap:9px;}
+  .brand svg{width:28px; height:28px;}
+  .brand-text{font-weight:700; font-size:15px;}
+  .brand-text span{color:var(--tf-blue-light);}
+  .back-link{
+    display:inline-flex; align-items:center; gap:6px;
+    color:var(--tf-text-dim); text-decoration:none;
+    font-size:12.5px; font-weight:600;
     border:1px solid rgba(255,255,255,0.12);
-    cursor:pointer;
-    margin-top:12px;
-    transition:border-color 0.15s ease, color 0.15s ease;
+    padding:8px 13px; border-radius:10px;
   }
-  .btn-ghost:hover{border-color:rgba(0,123,255,0.4); color:var(--tf-white);}
+  .back-link:hover{color:#fff; border-color:rgba(0,123,255,0.4);}
+  .back-link svg{width:14px; height:14px;}
 
-  .btn-policy{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    width:100%;
-    background:rgba(0,123,255,0.06);
-    color:var(--tf-blue-light);
-    text-decoration:none;
-    font-weight:600;
-    font-size:13px;
-    padding:13px 14px;
-    border-radius:12px;
-    border:1px solid rgba(0,123,255,0.25);
-    margin-top:1.25rem;
-    transition:background 0.15s ease, border-color 0.15s ease;
-  }
-  .btn-policy svg{width:16px; height:16px; flex-shrink:0;}
-  .btn-policy:hover{background:rgba(0,123,255,0.12); border-color:rgba(0,123,255,0.4);}
+  main{max-width:640px; margin:0 auto; padding:2rem 1.25rem 3rem;}
 
-  #resultado{
-    margin-top:1.5rem;
-    padding:1.5rem 1.25rem;
-    border-radius:16px;
-    display:none;
-    text-align:center;
-    border:1px solid;
+  .page-head{text-align:center; margin-bottom:2rem;}
+  .eyebrow{
+    font-weight:600; font-size:11px; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--tf-blue-light);
   }
-  #resultado.ok{
-    background:linear-gradient(180deg, rgba(0,123,255,0.12), rgba(0,123,255,0.03));
-    border-color:rgba(0,168,255,0.35);
-  }
-  #resultado.warn{
-    background:linear-gradient(180deg, rgba(245,166,35,0.1), rgba(245,166,35,0.03));
-    border-color:rgba(245,166,35,0.3);
-  }
-  .res-label{
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    margin-bottom:6px;
-  }
-  #resultado.ok .res-label{color:var(--tf-blue-light);}
-  #resultado.warn .res-label{color:var(--tf-amber);}
-  .res-price{
+  .page-head h1{
     font-family:'Bebas Neue',sans-serif;
-    font-size:3rem;
-    color:var(--tf-white);
-    margin:2px 0 8px;
-    letter-spacing:0.02em;
+    font-size:clamp(2rem, 7vw, 2.7rem);
+    margin:0.4rem 0 0.5rem;
   }
-  .res-note{font-size:12px; color:var(--tf-text-dim); margin-bottom:1.25rem; line-height:1.5;}
+  .page-head p{color:var(--tf-text-dim); font-size:13.5px; max-width:440px; margin:0 auto; line-height:1.6;}
 
-  .info-strip{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:8px;
-    margin-top:1.5rem;
+  .policy-card{
+    background:linear-gradient(180deg, var(--tf-gray) 0%, #131313 100%);
+    border:1px solid rgba(0,123,255,0.2);
+    border-radius:18px;
+    padding:1.5rem 1.5rem;
+    margin-bottom:1rem;
   }
-  .info-item{
-    text-align:center;
-    padding:12px 6px;
-    background:rgba(255,255,255,0.03);
-    border:1px solid rgba(255,255,255,0.06);
-    border-radius:12px;
-  }
-  .info-item svg{width:20px; height:20px; margin-bottom:6px; color:var(--tf-blue-light);}
-  .info-item p{margin:0; font-size:10.5px; font-weight:600; color:var(--tf-text-dim);}
-
-  .disclaimer{
-    text-align:center;
-    font-size:11px;
-    color:var(--tf-text-dim);
-    line-height:1.7;
-    margin:1.75rem auto 0;
-    max-width:420px;
-  }
-
-  /* ---------- MODAL ---------- */
-  .modal-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.7);
-    backdrop-filter:blur(3px);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:1rem;
-    z-index:50;
-  }
-  .modal-overlay.open{display:flex;}
-  .modal-box{
-    background:var(--tf-gray);
+  .policy-head{display:flex; align-items:center; gap:12px; margin-bottom:0.75rem;}
+  .policy-icon{
+    width:40px; height:40px; flex-shrink:0;
+    background:rgba(0,123,255,0.12);
     border:1px solid rgba(0,123,255,0.3);
-    border-radius:20px;
-    max-width:380px;
-    width:100%;
-    padding:1.75rem 1.5rem;
-    box-shadow:0 30px 70px -20px rgba(0,0,0,0.7);
+    border-radius:11px;
+    display:flex; align-items:center; justify-content:center;
   }
-  .modal-box h3{
-    font-family:'Bebas Neue',sans-serif;
-    font-size:1.6rem;
-    margin:0 0 4px;
+  .policy-icon svg{width:20px; height:20px; color:var(--tf-blue-light);}
+  .policy-head h2{font-size:15.5px; margin:0; font-weight:700;}
+  .policy-card p{font-size:13.5px; color:#dcdcdc; line-height:1.7; margin:0 0 0.5rem;}
+  .policy-card ul{margin:0.5rem 0 0; padding-left:1.1rem;}
+  .policy-card li{font-size:13.5px; color:#dcdcdc; line-height:1.7; margin-bottom:4px;}
+
+  .placeholder{
+    color:var(--tf-amber) !important;
+    background:rgba(245,166,35,0.08);
+    border:1px dashed rgba(245,166,35,0.4);
+    border-radius:8px;
+    padding:8px 10px;
+    display:block;
+    font-style:italic;
   }
-  .modal-box p.sub{font-size:12px; color:var(--tf-text-dim); margin:0 0 1.25rem;}
-  .modal-box .field{margin-bottom:0.9rem;}
-  .modal-actions{display:flex; gap:10px; margin-top:1.25rem;}
-  .btn-cancel{
-    flex:1;
-    background:transparent;
-    border:1px solid rgba(255,255,255,0.15);
-    color:var(--tf-text-dim);
-    font-weight:600;
-    font-size:13px;
-    padding:12px;
-    border-radius:12px;
-    cursor:pointer;
+
+  .cta-row{
+    display:flex; gap:10px; margin-top:1.75rem; flex-wrap:wrap;
   }
-  .btn-confirm{
-    flex:1;
-    background:var(--tf-blue);
-    border:none;
-    color:var(--tf-white);
-    font-weight:700;
-    font-size:13px;
-    padding:12px;
-    border-radius:12px;
-    cursor:pointer;
+  .btn-wa, .btn-back-main{
+    flex:1; min-width:160px;
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    font-weight:700; font-size:13.5px;
+    padding:14px; border-radius:12px;
+    text-decoration:none;
+  }
+  .btn-wa{
+    background:var(--tf-blue); color:#fff;
     box-shadow:0 10px 22px -10px rgba(0,123,255,0.7);
   }
-  .field-error{
-    color:var(--tf-amber);
-    font-size:11px;
-    margin-top:4px;
-    display:none;
+  .btn-wa svg{width:16px; height:16px;}
+  .btn-back-main{
+    background:transparent; color:var(--tf-text-dim);
+    border:1px solid rgba(255,255,255,0.15);
   }
+  .btn-back-main:hover{color:#fff; border-color:rgba(0,123,255,0.4);}
 
   footer{
     border-top:1px solid rgba(255,255,255,0.06);
     padding:1.75rem 1.25rem 2rem;
     text-align:center;
   }
-  .footer-logo{
-    font-family:'Montserrat',sans-serif;
-    font-weight:700;
-    font-size:14px;
-    margin-bottom:6px;
-  }
-  .footer-logo span{color:var(--tf-blue-light);}
-  footer p{
-    margin:2px 0;
-    font-size:11.5px;
-    color:var(--tf-text-dim);
-  }
+  footer p{margin:2px 0; font-size:11.5px; color:var(--tf-text-dim);}
   footer a{color:var(--tf-blue-light); text-decoration:none;}
 
   .footer-nav{
@@ -545,158 +141,107 @@
   .footer-nav a.current{color:var(--tf-blue-light); border-color:rgba(0,123,255,0.35);}
 
   .wa-float{
-    position:fixed;
-    right:16px; bottom:16px;
-    width:56px; height:56px;
-    background:#25D366;
-    border-radius:50%;
+    position:fixed; right:16px; bottom:16px;
+    width:56px; height:56px; background:#25D366; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
     box-shadow:0 12px 28px -8px rgba(0,0,0,0.6);
-    z-index:40;
-    text-decoration:none;
+    z-index:40; text-decoration:none;
   }
   .wa-float svg{width:28px; height:28px; color:#fff;}
-  .wa-float:hover{filter:brightness(1.08);}
   .wa-float::before{
-    content:'';
-    position:absolute;
-    inset:0;
-    border-radius:50%;
-    background:#25D366;
-    opacity:0.5;
-    animation:waPing 2.4s ease-out infinite;
-    z-index:-1;
+    content:''; position:absolute; inset:0; border-radius:50%;
+    background:#25D366; opacity:0.5; animation:waPing 2.4s ease-out infinite; z-index:-1;
   }
-  @keyframes waPing{
-    0%{transform:scale(1); opacity:0.45;}
-    80%{transform:scale(1.7); opacity:0;}
-    100%{opacity:0;}
-  }
+  @keyframes waPing{0%{transform:scale(1); opacity:0.45;} 80%{transform:scale(1.7); opacity:0;} 100%{opacity:0;}}
   @media (prefers-reduced-motion: reduce){ .wa-float::before{animation:none; display:none;} }
 </style>
 </head>
 <body>
 
-  <header class="hero">
-    <svg class="circuit" viewBox="0 0 400 220" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0 40 H90 V10 H180 M180 10 V60 H260 V90 H400" stroke="#00A8FF" stroke-width="1" fill="none" opacity="0.5"/>
-      <path d="M0 170 H60 V200 H160 M160 200 V150 H240 V180 H400" stroke="#007BFF" stroke-width="1" fill="none" opacity="0.4"/>
-      <circle cx="90" cy="40" r="2.5" fill="#00A8FF"/>
-      <circle cx="180" cy="10" r="2.5" fill="#00A8FF"/>
-      <circle cx="260" cy="90" r="2.5" fill="#007BFF"/>
-      <circle cx="160" cy="200" r="2.5" fill="#007BFF"/>
-    </svg>
-
-    <div class="hero-inner">
-      <div class="logo-row">
-        <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
-          <path d="M6 4 L34 4 L34 12 L18 12 L18 18 L28 18 L28 26 L18 26 L18 36 L6 36 Z" fill="#00A8FF"/>
-        </svg>
-        <div style="text-align:left;">
-          <div class="logo-word">TECH <span>FIX</span></div>
-          <span class="logo-sub">Servicio T&eacute;cnico</span>
-        </div>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 4 L34 4 L34 12 L18 12 L18 18 L28 18 L28 26 L18 26 L18 36 L6 36 Z" fill="#00A8FF"/></svg>
+        <span class="brand-text">TECH <span>FIX</span></span>
       </div>
-
-      <div class="crack-wrap" aria-hidden="true">
-        <div class="phone-body"></div>
-        <div class="phone-screen">
-          <div class="phone-glow"></div>
-        </div>
-        <svg class="crack-svg" viewBox="0 0 280 498">
-          <path d="M140 90 L110 150 L150 190 L100 260 L160 310 L120 400"/>
-          <path d="M140 90 L175 140 L145 210 L190 250"/>
-          <path d="M110 150 L60 175"/>
-          <path d="M100 260 L50 240"/>
-          <path d="M150 190 L210 195"/>
-        </svg>
-      </div>
-
-      <h1 class="hero-title">¿SE ROMP&Iacute;<br><span class="accent">TU CELULAR?</span></h1>
-      <p class="hero-sub">Cotiz&aacute; la reparaci&oacute;n de tu equipo al instante, con precios actualizados y garant&iacute;a incluida.</p>
-
-      <div class="trust-row">
-        <span class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="#00A8FF" stroke-width="2"><path d="M13 2 L3 14 h7 l-1 8 10-12h-7z"/></svg>R&aacute;pido</span>
-        <span class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="#00A8FF" stroke-width="2"><path d="M12 2 20 6 20 12 C20 17 16.5 20.5 12 22 C7.5 20.5 4 17 4 12 L4 6 Z"/></svg>Confiable</span>
-        <span class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="#00A8FF" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>Garant&iacute;a</span>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <div class="card">
-      <div class="card-head">
-        <span class="eyebrow">Cotizador</span>
-        <h2>Ped&iacute; tu presupuesto</h2>
-      </div>
-
-      <div id="estadoCarga" class="pulse">Cargando lista de repuestos y precios...</div>
-
-      <div class="field combo" id="comboMarca">
-        <label for="inputMarca"><b>1.</b> Marca de tu celular</label>
-        <input type="text" id="inputMarca" role="combobox" aria-expanded="false" aria-controls="listaMarca" aria-autocomplete="list" autocomplete="off" placeholder="Escrib&iacute; o eleg&iacute; una marca...">
-        <input type="hidden" id="inputMarcaKey">
-        <ul class="combo-list" id="listaMarca" role="listbox"></ul>
-      </div>
-
-      <div class="field combo" id="comboModelo">
-        <label for="inputModelo"><b>2.</b> Modelo</label>
-        <input type="text" id="inputModelo" role="combobox" aria-expanded="false" aria-controls="listaModelo" aria-autocomplete="list" autocomplete="off" placeholder="Primero eleg&iacute; la marca" disabled>
-        <input type="hidden" id="inputModeloKey">
-        <ul class="combo-list" id="listaModelo" role="listbox"></ul>
-      </div>
-
-      <div class="field">
-        <label for="selectFalla"><b>3.</b> Falla o reparaci&oacute;n</label>
-        <select id="selectFalla">
-          <option value="">-- Seleccionar falla --</option>
-          <option value="modulo">M&oacute;dulo / Pantalla</option>
-          <option value="bateria">Cambio de bater&iacute;a</option>
-          <option value="placa">Placa de carga / pin</option>
-          <option value="otro">Otra falla / consulta general</option>
-        </select>
-      </div>
-
-      <button class="btn-main" id="btnCalcular" onclick="calcularPrecio()">Calcular precio estimado</button>
-
-      <div id="resultado"></div>
-      <a href="politicas.html" class="btn-policy">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12h6M9 16h6M9 8h6M5 4h14a1 1 0 011 1v15l-4-2-3 2-3-2-3 2-3-2V5a1 1 0 011-1z"/></svg>
-        Nuestras pol&iacute;ticas de reparaci&oacute;n
+      <a href="index.html" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Volver al cotizador
       </a>
-    </div>
-
-    <p class="disclaimer">Precios sujetos a verificaci&oacute;n de stock y diagn&oacute;stico previo del equipo.<br>Garant&iacute;a y mano de obra profesional incluida en todos los arreglos.</p>
-  </main>
-
-  <div id="modalDatos" class="modal-overlay">
-    <div class="modal-box">
-      <h3>&iexcl;Un &uacute;ltimo paso!</h3>
-      <p class="sub">Ingres&aacute; tus datos para contactarte con nuestro servicio t&eacute;cnico v&iacute;a WhatsApp.</p>
-
-      <div class="field">
-        <label for="modalNombre">Nombre completo</label>
-        <input type="text" id="modalNombre" placeholder="Ej: Juan P&eacute;rez">
-      </div>
-      <div class="field" style="margin-bottom:0;">
-        <label for="modalTelefono">Tel&eacute;fono / WhatsApp</label>
-        <input type="tel" id="modalTelefono" placeholder="Ej: 3534123456">
-        <p class="field-error" id="errorTelefono">Ingres&aacute; un tel&eacute;fono v&aacute;lido (m&iacute;nimo 8 d&iacute;gitos).</p>
-      </div>
-
-      <div class="modal-actions">
-        <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
-        <button class="btn-confirm" onclick="confirmarYEnviarWhatsApp()">Continuar</button>
-      </div>
     </div>
   </div>
 
+  <main>
+    <div class="page-head">
+      <span class="eyebrow">Transparencia</span>
+      <h1>Nuestras pol&iacute;ticas</h1>
+      <p>As&iacute; trabajamos en Tech Fix: qu&eacute; esperar de tu reparaci&oacute;n, de principio a fin.</p>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-head">
+        <div class="policy-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        </div>
+        <h2>&iquest;Cu&aacute;nto demora?</h2>
+      </div>
+      <p>El tiempo depende de si tenemos el repuesto en stock. Si nos dej&aacute;s el equipo de domingo a jueves y el repuesto est&aacute; disponible, la reparaci&oacute;n demora entre <strong>24 y 48 horas</strong>. Si no lo tenemos en el momento, te avisamos, lo pedimos y calculamos junto a vos el tiempo estimado para completar tu reparaci&oacute;n.</p>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-head">
+        <div class="policy-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>
+        </div>
+        <h2>Calidad de repuestos</h2>
+      </div>
+      <p>No trabajamos con repuestos originales, sino con repuestos de <strong>alta calidad</strong>. Si prefer&iacute;s una opci&oacute;n m&aacute;s econ&oacute;mica, te la podemos ofrecer &mdash; pero te advertimos que no es la misma calidad, y te pasamos un presupuesto aparte para que decidas con esa informaci&oacute;n.</p>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-head">
+        <div class="policy-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+        </div>
+        <h2>Garant&iacute;a</h2>
+      </div>
+      <p>Ofrecemos <strong>30 d&iacute;as de garant&iacute;a</strong>. Cubre fallas relacionadas al m&oacute;dulo reparado. No cubre golpes, contacto con agua, ni ning&uacute;n otro da&ntilde;o ocasionado despu&eacute;s de la reparaci&oacute;n.</p>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-head">
+        <div class="policy-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>
+        </div>
+        <h2>Qu&eacute; te pedimos al dejar el equipo</h2>
+      </div>
+      <p>Al dejar el equipo pedimos el <strong>50% del pago total</strong> y el patr&oacute;n o contrase&ntilde;a de desbloqueo del dispositivo &mdash; esto nos permite probarlo correctamente y cubrir la garant&iacute;a. El <strong>50% restante</strong> se abona al retirar el equipo ya reparado y funcionando.</p>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-head">
+        <div class="policy-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+        </div>
+        <h2>Formas de pago</h2>
+      </div>
+      <p>Por el momento aceptamos <strong>efectivo</strong> y <strong>transferencia</strong>.</p>
+    </div>
+
+    <div class="cta-row">
+      <a href="https://wa.me/5493534132871" target="_blank" rel="noopener" class="btn-wa">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.8 14.2c-.2.6-1.4 1.2-2 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-5-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.9 1.4 1.9 2.3 1.3 1.1 2.3 1.5 2.7 1.7.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1l1.7.8c.2.1.4.2.4.3.1.2.1.9-.1 1.5z"/></svg>
+        Consultar por WhatsApp
+      </a>
+      <a href="index.html" class="btn-back-main">Volver al cotizador</a>
+    </div>
+  </main>
+
   <footer>
     <div class="footer-nav">
-      <a href="cotizador.html" class="current">Cotizador</a>
-      <a href="politicas.html">Pol&iacute;ticas</a>
+      <a href="index.html">Cotizador</a>
+      <a href="politicas.html" class="current">Pol&iacute;ticas</a>
     </div>
-    <div class="footer-logo">TECH <span>FIX</span></div>
     <p>Villa Mar&iacute;a, C&oacute;rdoba</p>
     <p><a href="https://wa.me/5493534132871" target="_blank" rel="noopener">WhatsApp 3534 13-2871</a></p>
     <p style="margin-top:10px; opacity:0.6;">&copy; Tech Fix &mdash; Todos los derechos reservados</p>
@@ -706,352 +251,5 @@
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.8 14.2c-.2.6-1.4 1.2-2 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-5-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.9 1.4 1.9 2.3 1.3 1.1 2.3 1.5 2.7 1.7.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1l1.7.8c.2.1.4.2.4.3.1.2.1.9-.1 1.5z"/></svg>
   </a>
 
-<script>
-  const NUMERO_WHATSAPP = "5493534132871";
-
-  const URL_CSV_MODULOS  = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQI2TrO6wINfTKsQSil8S8u5_eD_8VpExqZQM45Rv5A6v2EemWXDKGAi5aJirH9dq5ZlaDCFs9SL5-c/pub?gid=1530250286&single=true&output=csv";
-  const URL_CSV_BATERIAS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQI2TrO6wINfTKsQSil8S8u5_eD_8VpExqZQM45Rv5A6v2EemWXDKGAi5aJirH9dq5ZlaDCFs9SL5-c/pub?gid=315672756&single=true&output=csv";
-  const URL_CSV_PLACAS   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQI2TrO6wINfTKsQSil8S8u5_eD_8VpExqZQM45Rv5A6v2EemWXDKGAi5aJirH9dq5ZlaDCFs9SL5-c/pub?gid=2008820176&single=true&output=csv";
-  const URL_WEB_APP_SHEETS = "https://script.google.com/macros/s/AKfycbymTI-bPSNgBUXAqKMLfJlWtw4PDjc_Xc7qG5-rnoE-gRLW_wct4aYlNkJQPy3OONpo/exec";
-
-  let precios = { modulo: {}, bateria: {}, placa: {} };
-  let modelosPorMarca = new Map();
-  let marcasDisplay = new Map();
-  let cargasCompletadas = 0;
-  let cargasConError = 0;
-  let consultaActual = null;
-
-  window.addEventListener('DOMContentLoaded', () => { cargarDatosSheets(); });
-
-  function normalizarTexto(txt){
-    if (!txt) return '';
-    return txt.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(/\s+/g, ' ');
-  }
-
-  function formatearPrecioAMiles(precioTexto){
-    if (!precioTexto) return '';
-    let str = precioTexto.toString().replace('$', '').trim();
-    let soloDigitos = str.replace(/[^0-9]/g, '');
-    if (!soloDigitos) return precioTexto;
-    let numero = parseInt(soloDigitos, 10);
-    if (str.includes(',') || str.includes('.')) {
-      let partes = str.split(/[,.]/);
-      if (partes.length > 1 && partes[partes.length - 1].length === 2) {
-        numero = Math.round(numero / 100);
-      }
-    }
-    let miles = Math.round(numero / 1000);
-    return `$${miles}mil`;
-  }
-
-  function actualizarEstadoCarga(huboError){
-    cargasCompletadas++;
-    if (huboError) cargasConError++;
-    if (cargasCompletadas >= 3) {
-      const elem = document.getElementById("estadoCarga");
-      elem.classList.remove("pulse");
-      if (cargasConError === 3) {
-        elem.classList.add("err");
-        elem.innerHTML = "No pudimos cargar los precios. Escrib&iacute;nos por WhatsApp para cotizar tu equipo.";
-      } else if (cargasConError > 0) {
-        elem.classList.add("ok");
-        elem.innerHTML = "Lista de precios cargada (algunos datos podr&iacute;an faltar).";
-      } else {
-        elem.classList.add("ok");
-        elem.innerHTML = "Lista de precios cargada y actualizada.";
-      }
-      poblarSelectMarcas();
-    }
-  }
-
-  function procesarCSV(data, falla){
-    data.forEach(row => {
-      let keys = Object.keys(row);
-      let colMarca = keys.find(k => normalizarTexto(k) === 'marca');
-      let colModelo = keys.find(k => normalizarTexto(k) === 'modelo');
-      let colPrecio = keys.find(k =>
-        normalizarTexto(k) === 'total' ||
-        normalizarTexto(k).includes('precio final') ||
-        normalizarTexto(k).includes('total')
-      );
-      if (!colModelo || !row[colModelo]) return;
-
-      const marcaVal = (colMarca && row[colMarca]) ? row[colMarca].toString().trim() : 'Otras marcas';
-      const modeloVal = row[colModelo].toString().trim();
-      const precioVal = (colPrecio && row[colPrecio]) ? row[colPrecio].toString().trim() : 'Consultar';
-      const marcaKey = normalizarTexto(marcaVal);
-      const modeloKey = normalizarTexto(modeloVal);
-
-      marcasDisplay.set(marcaKey, marcaVal);
-
-      if (!modelosPorMarca.has(marcaKey)) modelosPorMarca.set(marcaKey, new Map());
-      modelosPorMarca.get(marcaKey).set(modeloKey, modeloVal);
-
-      if (!precios[falla][marcaKey]) precios[falla][marcaKey] = {};
-      precios[falla][marcaKey][modeloKey] = { marca: marcaVal, modelo: modeloVal, precioFinal: precioVal };
-    });
-  }
-
-  async function descargarYParsear(url, falla){
-    try {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error('HTTP ' + response.status);
-      const csvText = await response.text();
-      Papa.parse(csvText, {
-        header: true,
-        skipEmptyLines: true,
-        complete: function(results){
-          procesarCSV(results.data, falla);
-          actualizarEstadoCarga(false);
-        },
-        error: function(){ actualizarEstadoCarga(true); }
-      });
-    } catch (error) {
-      console.error("Error al descargar CSV:", error);
-      actualizarEstadoCarga(true);
-    }
-  }
-
-  function cargarDatosSheets(){
-    descargarYParsear(URL_CSV_MODULOS, 'modulo');
-    descargarYParsear(URL_CSV_BATERIAS, 'bateria');
-    descargarYParsear(URL_CSV_PLACAS, 'placa');
-  }
-
-  function crearCombobox({ inputId, keyId, listId, getOpciones, onSeleccion, onLimpiar }){
-    const input = document.getElementById(inputId);
-    const keyInput = document.getElementById(keyId);
-    const lista = document.getElementById(listId);
-    let activa = -1;
-
-    function render(filtro){
-      const opciones = getOpciones().filter(([, nombre]) =>
-        normalizarTexto(nombre).includes(normalizarTexto(filtro))
-      );
-      lista.innerHTML = "";
-      activa = -1;
-      if (opciones.length === 0) {
-        lista.innerHTML = '<li class="empty">Sin resultados</li>';
-      } else {
-        opciones.forEach(([key, nombre]) => {
-          const li = document.createElement("li");
-          li.textContent = nombre;
-          li.setAttribute("role", "option");
-          li.addEventListener("mousedown", (e) => { e.preventDefault(); seleccionar(key, nombre); });
-          lista.appendChild(li);
-        });
-      }
-      lista.classList.add("open");
-      input.setAttribute("aria-expanded", "true");
-    }
-
-    function cerrar(){
-      lista.classList.remove("open");
-      input.setAttribute("aria-expanded", "false");
-      activa = -1;
-    }
-
-    function seleccionar(key, nombre){
-      input.value = nombre;
-      keyInput.value = key;
-      cerrar();
-      if (onSeleccion) onSeleccion(key, nombre);
-    }
-
-    input.addEventListener("focus", () => { if (!input.disabled) render(input.value); });
-    input.addEventListener("input", () => {
-      if (keyInput.value) { keyInput.value = ""; if (onLimpiar) onLimpiar(); }
-      render(input.value);
-    });
-    input.addEventListener("keydown", (e) => {
-      const items = Array.from(lista.querySelectorAll('li[role="option"]'));
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        if (!lista.classList.contains("open")) { render(input.value); return; }
-        activa = Math.min(activa + 1, items.length - 1);
-        items.forEach((li, i) => li.classList.toggle("active", i === activa));
-        items[activa]?.scrollIntoView({ block: "nearest" });
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        activa = Math.max(activa - 1, 0);
-        items.forEach((li, i) => li.classList.toggle("active", i === activa));
-        items[activa]?.scrollIntoView({ block: "nearest" });
-      } else if (e.key === "Enter") {
-        e.preventDefault();
-        if (activa >= 0 && items[activa]) items[activa].dispatchEvent(new MouseEvent("mousedown"));
-      } else if (e.key === "Escape") {
-        cerrar();
-      }
-    });
-    document.addEventListener("click", (e) => {
-      if (!input.contains(e.target) && !lista.contains(e.target)) cerrar();
-    });
-
-    return { cerrar, limpiar: () => { input.value = ""; keyInput.value = ""; } };
-  }
-
-  const comboMarca = crearCombobox({
-    inputId: "inputMarca", keyId: "inputMarcaKey", listId: "listaMarca",
-    getOpciones: () => Array.from(marcasDisplay.entries()).sort((a, b) => a[1].localeCompare(b[1])),
-    onSeleccion: () => habilitarModelo()
-  });
-
-  const comboModelo = crearCombobox({
-    inputId: "inputModelo", keyId: "inputModeloKey", listId: "listaModelo",
-    getOpciones: () => {
-      const marcaKey = document.getElementById("inputMarcaKey").value;
-      const mapa = modelosPorMarca.get(marcaKey);
-      return mapa ? Array.from(mapa.entries()).sort((a, b) => a[1].localeCompare(b[1])) : [];
-    }
-  });
-
-  function habilitarModelo(){
-    const inputModelo = document.getElementById("inputModelo");
-    comboModelo.limpiar();
-    inputModelo.disabled = false;
-    inputModelo.placeholder = "Escrib\u00ed o eleg\u00ed un modelo...";
-    inputModelo.focus();
-  }
-
-  function poblarSelectMarcas(){
-    // Los datos ya est\u00e1n en marcasDisplay; el combobox los lee al abrirse.
-  }
-
-  function resetCotizador(){
-    comboMarca.limpiar();
-    comboModelo.limpiar();
-    const inputModelo = document.getElementById("inputModelo");
-    inputModelo.disabled = true;
-    inputModelo.placeholder = "Primero eleg\u00ed la marca";
-    document.getElementById("selectFalla").value = "";
-    const contenedorResultado = document.getElementById("resultado");
-    contenedorResultado.style.display = "none";
-    contenedorResultado.className = "";
-    document.getElementById("inputMarca").focus();
-  }
-
-  function calcularPrecio(){
-    const marcaKey = document.getElementById("inputMarcaKey").value;
-    const modeloKey = document.getElementById("inputModeloKey").value;
-    const falla = document.getElementById("selectFalla").value;
-    const contenedorResultado = document.getElementById("resultado");
-
-    if (!marcaKey || !modeloKey || !falla) {
-      alert("Por favor eleg\u00ed marca, modelo y la falla de la lista (pod\u00e9s escribir para filtrar).");
-      return;
-    }
-
-    const marcaNombre = marcasDisplay.get(marcaKey) || marcaKey;
-    const modeloNombre = modelosPorMarca.get(marcaKey)?.get(modeloKey) || modeloKey;
-    const equipoTexto = `${marcaNombre} ${modeloNombre}`;
-
-    contenedorResultado.style.display = "block";
-
-    if (falla === "otro") {
-      consultaActual = { equipo: equipoTexto, falla: "Consulta especial / otra falla", precio: "Personalizado" };
-      contenedorResultado.className = "warn";
-      contenedorResultado.innerHTML = `
-        <p class="res-label">Consulta personalizada</p>
-        <p class="res-note">Para esta falla, escrib&iacute;nos directo por WhatsApp y te damos el presupuesto en el momento.</p>
-        <button class="btn-wa" onclick="abrirModal()">${iconoWA()}Consultar por WhatsApp</button>
-        <div><button class="btn-ghost" onclick="resetCotizador()">Buscar otro equipo</button></div>
-      `;
-      return;
-    }
-
-    const nombresFalla = { modulo: "M\u00f3dulo / Pantalla", bateria: "Cambio de bater\u00eda", placa: "Placa de carga" };
-    const nombreFallaTexto = nombresFalla[falla] || falla;
-    const itemEncontrado = precios[falla]?.[marcaKey]?.[modeloKey];
-
-    if (!itemEncontrado) {
-      consultaActual = { equipo: equipoTexto, falla: nombreFallaTexto, precio: "No encontrado" };
-      contenedorResultado.className = "warn";
-      contenedorResultado.innerHTML = `
-        <p class="res-label">Modelo no encontrado</p>
-        <p class="res-note">No tenemos cargado el precio autom\u00e1tico para "${equipoTexto}" en "${nombreFallaTexto}". \u00a1Podemos cotizarlo por WhatsApp!</p>
-        <button class="btn-wa" onclick="abrirModal()">${iconoWA()}Consultar por WhatsApp</button>
-        <div><button class="btn-ghost" onclick="resetCotizador()">Buscar otro equipo</button></div>
-      `;
-      return;
-    }
-
-    const precioOriginal = itemEncontrado.precioFinal;
-    const precioRedondeado = formatearPrecioAMiles(precioOriginal);
-    consultaActual = { equipo: equipoTexto, falla: nombreFallaTexto, precio: precioOriginal };
-
-    contenedorResultado.className = "ok";
-    contenedorResultado.innerHTML = `
-      <p class="res-label">Presupuesto estimado</p>
-      <p class="res-price">${precioRedondeado}</p>
-      <p class="res-note">Incluye repuesto, instalaci\u00f3n y garant\u00eda.</p>
-      <button class="btn-wa" onclick="abrirModal()">${iconoWA()}Pedir turno por WhatsApp</button>
-      <div><button class="btn-ghost" onclick="resetCotizador()">Buscar otro equipo</button></div>
-    `;
-  }
-
-  function iconoWA(){
-    return '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.8 14.2c-.2.6-1.4 1.2-2 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-5-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.9 1.4 1.9 2.3 1.3 1.1 2.3 1.5 2.7 1.7.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1l1.7.8c.2.1.4.2.4.3.1.2.1.9-.1 1.5z"/></svg>';
-  }
-
-  function abrirModal(){
-    document.getElementById("modalDatos").classList.add("open");
-  }
-  function cerrarModal(){
-    document.getElementById("modalDatos").classList.remove("open");
-    document.getElementById("errorTelefono").style.display = "none";
-  }
-
-  function telefonoValido(tel){
-    const soloDigitos = tel.replace(/[^0-9]/g, '');
-    return soloDigitos.length >= 8;
-  }
-
-  function confirmarYEnviarWhatsApp(){
-    const nombre = document.getElementById("modalNombre").value.trim();
-    const telefono = document.getElementById("modalTelefono").value.trim();
-    const errorTelefono = document.getElementById("errorTelefono");
-
-    if (!nombre || !telefono) { alert("Completa nombre y tel\u00e9fono."); return; }
-    if (!telefonoValido(telefono)) { errorTelefono.style.display = "block"; return; }
-    errorTelefono.style.display = "none";
-
-    const nuevaConsulta = {
-      id: Date.now(),
-      fecha: new Date().toLocaleString('es-AR'),
-      cliente: nombre,
-      telefono: telefono,
-      equipo: consultaActual.equipo,
-      falla: consultaActual.falla,
-      precio: consultaActual.precio
-    };
-
-    try {
-      let consultas = JSON.parse(localStorage.getItem('techfix_consultas')) || [];
-      consultas.unshift(nuevaConsulta);
-      localStorage.setItem('techfix_consultas', JSON.stringify(consultas));
-    } catch (e) { console.error("No se pudo guardar localmente:", e); }
-
-    const precioTxt = (consultaActual.precio !== "Personalizado" && consultaActual.precio !== "No encontrado")
-      ? formatearPrecioAMiles(consultaActual.precio) : consultaActual.precio;
-    const mensajeWA = encodeURIComponent(`Hola! Soy ${nombre}. Vi en la web la cotizaci\u00f3n para reparar mi ${consultaActual.equipo} (${consultaActual.falla}) por un valor de ${precioTxt}. Quisiera coordinar un turno.`);
-
-    cerrarModal();
-    window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensajeWA}`, '_blank');
-
-    if (URL_WEB_APP_SHEETS && URL_WEB_APP_SHEETS.includes('script.google.com')) {
-      try {
-        fetch(URL_WEB_APP_SHEETS, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(nuevaConsulta),
-          keepalive: true
-        });
-      } catch (err) {
-        console.error("Error en segundo plano con Sheets:", err);
-      }
-    }
-  }
-</script>
 </body>
 </html>
