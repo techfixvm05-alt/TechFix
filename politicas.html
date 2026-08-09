@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pol&iacute;ticas de Reparaci&oacute;n - Tech Fix</title>
+<meta name="description" content="Conoc&eacute; c&oacute;mo trabajamos en Tech Fix: tiempos de reparaci&oacute;n, garant&iacute;a, calidad de repuestos y qu&eacute; necesitamos de vos.">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tf-blue:#007BFF;
+    --tf-blue-light:#00A8FF;
+    --tf-blue-dark:#0D47A1;
+    --tf-black:#0A0A0A;
+    --tf-gray:#1B1B1B;
+    --tf-white:#FFFFFF;
+    --tf-amber:#F5A623;
+    --tf-text-dim:#9BA3AF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--tf-black);
+    color:var(--tf-white);
+    font-family:'Montserrat',sans-serif;
+    min-height:100vh;
+  }
+
+  .topbar{
+    padding:1.25rem 1.25rem 1rem;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    background:linear-gradient(180deg, var(--tf-black), #050505);
+  }
+  .topbar-inner{
+    max-width:640px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .brand{display:flex; align-items:center; gap:9px;}
+  .brand svg{width:28px; height:28px;}
+  .brand-text{font-weight:700; font-size:15px;}
+  .brand-text span{color:var(--tf-blue-light);}
+  .back-link{
+    display:inline-flex; align-items:center; gap:6px;
+    color:var(--tf-text-dim); text-decoration:none;
+    font-size:12.5px; font-weight:600;
+    border:1px solid rgba(255,255,255,0.12);
+    padding:8px 13px; border-radius:10px;
+  }
+  .back-link:hover{color:#fff; border-color:rgba(0,123,255,0.4);}
+  .back-link svg{width:14px; height:14px;}
+
+  main{max-width:640px; margin:0 auto; padding:2rem 1.25rem 3rem;}
+
+  .page-head{text-align:center; margin-bottom:2rem;}
+  .eyebrow{
+    font-weight:600; font-size:11px; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--tf-blue-light);
+  }
+  .page-head h1{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(2rem, 7vw, 2.7rem);
+    margin:0.4rem 0 0.5rem;
+  }
+  .page-head p{color:var(--tf-text-dim); font-size:13.5px; max-width:440px; margin:0 auto; line-height:1.6;}
+
+  .policy-card{
+    background:linear-gradient(180deg, var(--tf-gray) 0%, #131313 100%);
+    border:1px solid rgba(0,123,255,0.2);
+    border-radius:18px;
+    padding:1.5rem 1.5rem;
+    margin-bottom:1rem;
+  }
+  .policy-head{display:flex; align-items:center; gap:12px; margin-bottom:0.75rem;}
+  .policy-icon{
+    width:40px; height:40px; flex-shrink:0;
+    background:rgba(0,123,255,0.12);
+    border:1px solid rgba(0,123,255,0.3);
+    border-radius:11px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .policy-icon svg{width:20px; height:20px; color:var(--tf-blue-light);}
+  .policy-head h2{font-size:15.5px; margin:0; font-weight:700;}
+  .policy-card p{font-size:13.5px; color:#dcdcdc; line-height:1.7; margin:0 0 0.5rem;}
+  .policy-card ul{margin:0.5rem 0 0; padding-left:1.1rem;}
+  .policy-card li{font-size:13.5px; color:#dcdcdc; line-height:1.7; margin-bottom:4px;}
+
+  .placeholder{
+    color:var(--tf-amber) !important;
+    background:rgba(245,166,35,0.08);
+    border:1px dashed rgba(245,166,35,0.4);
+    border-radius:8px;
+    padding:8px 10px;
+    display:block;
+    font-style:italic;
+  }
+
+  .cta-row{
+    display:flex; gap:10px; margin-top:1.75rem; flex-wrap:wrap;
+  }
+  .btn-wa, .btn-back-main{
+    flex:1; min-width:160px;
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    font-weight:700; font-size:13.5px;
+    padding:14px; border-radius:12px;
+    text-decoration:none;
+  }
+  .btn-wa{
+    background:var(--tf-blue); color:#fff;
+    box-shadow:0 10px 22px -10px rgba(0,123,255,0.7);
+  }
+  .btn-wa svg{width:16px; height:16px;}
+  .btn-back-main{
+    background:transparent; color:var(--tf-text-dim);
+    border:1px solid rgba(255,255,255,0.15);
+  }
+  .btn-back-main:hover{color:#fff; border-color:rgba(0,123,255,0.4);}
+
+  footer{
+    border-top:1px solid rgba(255,255,255,0.06);
+    padding:1.75rem 1.25rem 2rem;
+    text-align:center;
+  }
+  footer p{margin:2px 0; font-size:11.5px; color:var(--tf-text-dim);}
+  footer a{color:var(--tf-blue-light); text-decoration:none;}
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 4 L34 4 L34 12 L18 12 L18 18 L28 18 L28 26 L18 26 L18 36 L6 36 Z" fill="#00A8FF"/></svg>
+        <span class="brand-text">TECH <span>FIX</span></span>
+      </div>
+      <a href="cotizador.html" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Volver al cotizador
+      </a>
+    </div>
+  </div>
+
+  <main>
+    <div class="page-head">
+      <span class="eyebrow">Transparencia</span>
+      <h1>Nuestras pol&iacute;ticas</h1>
+      <p>As&iacute; trabajamos en Tech Fix: qu&eacute; esperar de tu reparaci&oacute;n, de principio a fin.</p>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-head">
+        <div class="policy-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        </div>
+        <h2>&iquest;Cu&aacute;nto demora?</h2>
+      </div>
+      <p>El tiempo depende de si tenemos el repuesto en stock. Si nos dej&aacute;s el equipo de domingo a jueves y el repuesto est&aacute; disponible, la reparaci&oacute;n demora entre <strong>24 y 48 horas</strong>. Si no lo tenemos en el momento, te avisamos, lo pedimos y calculamos junto a vos el tiempo estimado para completar tu reparaci&oacute;n.</p>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-head">
+        <div class="policy-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>
+        </div>
+        <h2>Calidad de repuestos</h2>
+      </div>
+      <p>No trabajamos con repuestos originales, sino con repuestos de <strong>alta calidad</strong>. Si prefer&iacute;s una opci&oacute;n m&aacute;s econ&oacute;mica, te la podemos ofrecer &mdash; pero te advertimos que no es la misma calidad, y te pasamos un presupuesto aparte para que decidas con esa informaci&oacute;n.</p>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-head">
+        <div class="policy-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+        </div>
+        <h2>Garant&iacute;a</h2>
+      </div>
+      <p>Ofrecemos <strong>30 d&iacute;as de garant&iacute;a</strong>. Cubre fallas relacionadas al m&oacute;dulo reparado. No cubre golpes, contacto con agua, ni ning&uacute;n otro da&ntilde;o ocasionado despu&eacute;s de la reparaci&oacute;n.</p>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-head">
+        <div class="policy-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>
+        </div>
+        <h2>Qu&eacute; te pedimos al dejar el equipo</h2>
+      </div>
+      <p>Al dejar el equipo pedimos el <strong>50% del pago total</strong> y el patr&oacute;n o contrase&ntilde;a de desbloqueo del dispositivo &mdash; esto nos permite probarlo correctamente y cubrir la garant&iacute;a. El <strong>50% restante</strong> se abona al retirar el equipo ya reparado y funcionando.</p>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-head">
+        <div class="policy-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+        </div>
+        <h2>Formas de pago</h2>
+      </div>
+      <p>Por el momento aceptamos <strong>efectivo</strong> y <strong>transferencia</strong>.</p>
+    </div>
+
+    <div class="cta-row">
+      <a href="https://wa.me/5493534132871" target="_blank" rel="noopener" class="btn-wa">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.8 14.2c-.2.6-1.4 1.2-2 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-5-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.9 1.4 1.9 2.3 1.3 1.1 2.3 1.5 2.7 1.7.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1l1.7.8c.2.1.4.2.4.3.1.2.1.9-.1 1.5z"/></svg>
+        Consultar por WhatsApp
+      </a>
+      <a href="cotizador.html" class="btn-back-main">Volver al cotizador</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Villa Mar&iacute;a, C&oacute;rdoba</p>
+    <p><a href="https://wa.me/5493534132871" target="_blank" rel="noopener">WhatsApp 3534 13-2871</a></p>
+    <p style="margin-top:10px; opacity:0.6;">&copy; Tech Fix &mdash; Todos los derechos reservados</p>
+  </footer>
+
+</body>
+</html>
