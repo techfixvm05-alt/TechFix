@@ -94,10 +94,19 @@
 
   main{max-width:760px; margin:0 auto; padding:1.5rem 1.25rem 3rem;}
 
-  .stats{display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin-bottom:1.25rem;}
-  .stat{background:var(--tf-gray); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:14px 16px;}
-  .stat p.n{font-family:'Bebas Neue',sans-serif; font-size:2rem; margin:0;}
-  .stat p.l{font-size:11px; color:var(--tf-text-dim); margin:2px 0 0; text-transform:uppercase; letter-spacing:0.08em;}
+  .stats{display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:1.1rem;}
+  .stat{background:var(--tf-gray); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:12px 10px; text-align:center;}
+  .stat p.n{font-family:'Bebas Neue',sans-serif; font-size:1.8rem; margin:0;}
+  .stat p.l{font-size:9.5px; color:var(--tf-text-dim); margin:2px 0 0; text-transform:uppercase; letter-spacing:0.06em;}
+
+  .filter-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:1rem;}
+  .filter-chip{
+    font-size:11.5px; font-weight:600;
+    background:rgba(255,255,255,0.04); color:var(--tf-text-dim);
+    border:1px solid rgba(255,255,255,0.1);
+    padding:7px 13px; border-radius:999px; cursor:pointer;
+  }
+  .filter-chip.active{background:rgba(0,123,255,0.18); color:var(--tf-blue-light); border-color:rgba(0,123,255,0.4);}
 
   .search-row input{
     width:100%;
@@ -108,8 +117,8 @@
   .search-row input:focus{outline:none; border-color:var(--tf-blue-light); box-shadow:0 0 0 3px rgba(0,168,255,0.25);}
   .search-row input::placeholder{color:#6b6b6b;}
 
-  #estado{font-size:12px; color:var(--tf-text-dim); text-align:center; padding:1rem 0;}
-  #estado.err{color:var(--tf-amber);}
+  #estadoMsg{font-size:12px; color:var(--tf-text-dim); text-align:center; padding:1rem 0;}
+  #estadoMsg.err{color:var(--tf-amber);}
 
   .fila{
     background:var(--tf-gray);
@@ -132,6 +141,20 @@
     padding:8px 12px; border-radius:9px; text-decoration:none; white-space:nowrap;
   }
   .fila-wa svg{width:13px; height:13px;}
+
+  .fila-estado{
+    font-size:11px; font-weight:700;
+    border-radius:8px; padding:6px 9px;
+    border:1px solid; cursor:pointer;
+    background:#101010;
+    appearance:none;
+    -webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239BA3AF' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 8px center; padding-right:24px;
+  }
+  .fila-estado.pendiente{color:var(--tf-amber); border-color:rgba(245,166,35,0.4);}
+  .fila-estado.reparacion{color:var(--tf-blue-light); border-color:rgba(0,168,255,0.4);}
+  .fila-estado.entregado{color:#4ade80; border-color:rgba(74,222,128,0.4);}
 
   .empty-state{
     text-align:center; padding:3rem 1rem; color:var(--tf-text-dim);
@@ -176,17 +199,25 @@
       <div class="stats">
         <div class="stat"><p class="n display" id="statTotal">0</p><p class="l">Consultas totales</p></div>
         <div class="stat"><p class="n display" id="statHoy">0</p><p class="l">Consultas de hoy</p></div>
+        <div class="stat"><p class="n display" id="statPendientes">0</p><p class="l">Pendientes</p></div>
+      </div>
+
+      <div class="filter-row" id="filtroEstado">
+        <button class="filter-chip active" data-filtro="todas" onclick="setFiltroEstado('todas')">Todas</button>
+        <button class="filter-chip" data-filtro="pendiente" onclick="setFiltroEstado('pendiente')">Pendiente</button>
+        <button class="filter-chip" data-filtro="reparacion" onclick="setFiltroEstado('reparacion')">En reparaci&oacute;n</button>
+        <button class="filter-chip" data-filtro="entregado" onclick="setFiltroEstado('entregado')">Entregado</button>
       </div>
 
       <div class="search-row">
         <input type="text" id="inputBuscar" placeholder="Buscar por cliente, equipo o tel&eacute;fono..." oninput="renderLista()">
       </div>
 
-      <div id="estado">Cargando consultas...</div>
+      <div id="estadoMsg">Cargando consultas...</div>
       <div id="lista"></div>
     </main>
 
-    <p class="config-note">Los datos se leen en vivo desde la hoja de consultas de Google Sheets.</p>
+    <p class="config-note">Los datos se leen en vivo desde la hoja de consultas de Google Sheets. El estado de cada consulta (pendiente / en reparaci&oacute;n / entregado) se guarda solo en este navegador &mdash; si necesit&aacute;s verlo desde varios dispositivos, avisame y te agrego la sincronizaci&oacute;n con la hoja.</p>
   </div>
 
 <script>
@@ -202,6 +233,25 @@
   // -----------------------------------------------------------------
 
   let consultas = [];
+  let filtroEstadoActivo = "todas";
+  const ESTADOS = { pendiente: "Pendiente", reparacion: "En reparaci\u00f3n", entregado: "Entregado" };
+
+  function getEstados(){
+    try { return JSON.parse(localStorage.getItem('techfix_estados')) || {}; }
+    catch(e){ return {}; }
+  }
+  function setEstadoConsulta(id, estado){
+    const estados = getEstados();
+    estados[id] = estado;
+    localStorage.setItem('techfix_estados', JSON.stringify(estados));
+  }
+  function setFiltroEstado(valor){
+    filtroEstadoActivo = valor;
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.classList.toggle('active', chip.dataset.filtro === valor);
+    });
+    renderLista();
+  }
 
   function validarAcceso(){
     const valor = document.getElementById("inputCodigo").value.trim();
@@ -240,7 +290,7 @@
   }
 
   async function cargarConsultas(){
-    const estado = document.getElementById("estado");
+    const estado = document.getElementById("estadoMsg");
     const btn = document.getElementById("btnRefresh");
     btn.classList.add("loading");
     estado.className = "";
@@ -268,11 +318,16 @@
               return k ? (row[k] || '').toString().trim() : '';
             };
             const fechaTxt = get('fecha');
+            const cliente = get('cliente');
+            const telefono = get('telefono');
+            const ultimaCol = keys[keys.length - 1];
+            const idCruda = (ultimaCol && row[ultimaCol]) ? row[ultimaCol].toString().trim() : '';
             return {
+              id: idCruda || `${fechaTxt}-${cliente}-${telefono}`,
               fecha: fechaTxt,
               fechaObj: parseFechaAR(fechaTxt),
-              cliente: get('cliente'),
-              telefono: get('telefono'),
+              cliente: cliente,
+              telefono: telefono,
               equipo: get('equipo'),
               falla: get('falla'),
               precio: get('precio')
@@ -298,23 +353,32 @@
   function renderLista(){
     const filtro = normalizarTexto(document.getElementById("inputBuscar").value);
     const lista = document.getElementById("lista");
-    const filtradas = filtro
+    const estados = getEstados();
+
+    let filtradas = filtro
       ? consultas.filter(c => normalizarTexto(`${c.cliente} ${c.equipo} ${c.telefono} ${c.falla}`).includes(filtro))
       : consultas;
 
+    if (filtroEstadoActivo !== "todas") {
+      filtradas = filtradas.filter(c => (estados[c.id] || "pendiente") === filtroEstadoActivo);
+    }
+
     document.getElementById("statTotal").textContent = consultas.length;
     document.getElementById("statHoy").textContent = consultas.filter(c => esHoy(c.fechaObj)).length;
+    document.getElementById("statPendientes").textContent = consultas.filter(c => (estados[c.id] || "pendiente") === "pendiente").length;
 
     if (filtradas.length === 0) {
       lista.innerHTML = `
         <div class="empty-state">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
-          <p>${consultas.length === 0 ? 'Todav\u00eda no hay consultas registradas.' : 'No encontramos resultados para esa b\u00fasqueda.'}</p>
+          <p>${consultas.length === 0 ? 'Todav\u00eda no hay consultas registradas.' : 'No encontramos resultados para esa b\u00fasqueda o filtro.'}</p>
         </div>`;
       return;
     }
 
-    lista.innerHTML = filtradas.map(c => `
+    lista.innerHTML = filtradas.map(c => {
+      const estadoActual = estados[c.id] || "pendiente";
+      return `
       <div class="fila">
         <div class="fila-top">
           <span class="fila-cliente">${escapeHtml(c.cliente || 'Sin nombre')}</span>
@@ -326,10 +390,24 @@
             <span class="fila-falla">${escapeHtml(c.falla || '-')}</span>
             <span class="fila-precio"> &middot; ${escapeHtml(c.precio || 'Consultar')}</span>
           </div>
-          ${c.telefono ? `<a class="fila-wa" href="https://wa.me/${soloDigitos(c.telefono)}" target="_blank" rel="noopener">${iconoWA()}${escapeHtml(c.telefono)}</a>` : ''}
+          <div style="display:flex; gap:8px; align-items:center;">
+            <select class="fila-estado ${estadoActual}" onchange="cambiarEstado('${c.id}', this)">
+              <option value="pendiente" ${estadoActual === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+              <option value="reparacion" ${estadoActual === 'reparacion' ? 'selected' : ''}>En reparaci\u00f3n</option>
+              <option value="entregado" ${estadoActual === 'entregado' ? 'selected' : ''}>Entregado</option>
+            </select>
+            ${c.telefono ? `<a class="fila-wa" href="https://wa.me/${soloDigitos(c.telefono)}" target="_blank" rel="noopener">${iconoWA()}${escapeHtml(c.telefono)}</a>` : ''}
+          </div>
         </div>
       </div>
-    `).join('');
+    `; }).join('');
+  }
+
+  function cambiarEstado(id, selectEl){
+    setEstadoConsulta(id, selectEl.value);
+    selectEl.className = 'fila-estado ' + selectEl.value;
+    document.getElementById("statPendientes").textContent = consultas.filter(c => (getEstados()[c.id] || "pendiente") === "pendiente").length;
+    if (filtroEstadoActivo !== "todas") renderLista();
   }
 
   function soloDigitos(tel){ return tel.toString().replace(/[^0-9]/g, ''); }
