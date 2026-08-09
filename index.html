@@ -8,10 +8,35 @@
 <meta name="theme-color" content="#0A0A0A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%230A0A0A'/%3E%3Cpath d='M9 7 L31 7 L31 13 L17 13 L17 17 L27 17 L27 23 L17 23 L17 33 L9 33 Z' fill='%2300A8FF'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Tech Fix",
+  "description": "Servicio técnico de reparación de celulares: pantallas, baterías y placas de carga, con garantía.",
+  "telephone": "+5493534132871",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Villa María",
+    "addressRegion": "Córdoba",
+    "addressCountry": "AR"
+  },
+  "areaServed": "Villa María, Córdoba",
+  "makesOffer": [
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Reparación de pantalla / módulo" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Cambio de batería" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Reparación de placa de carga" } }
+  ]
+}
+</script>
+<!-- Cuando tengas dominio propio y dirección exacta, completá "url", "address.streetAddress",
+     "address.postalCode" y "openingHoursSpecification" acá arriba para mejorar el SEO local. -->
 <style>
   :root{
     --tf-blue:#007BFF;
@@ -505,6 +530,49 @@
     color:var(--tf-text-dim);
   }
   footer a{color:var(--tf-blue-light); text-decoration:none;}
+
+  .footer-nav{
+    display:flex; justify-content:center; gap:8px; flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .footer-nav a{
+    font-size:11.5px; font-weight:600;
+    color:var(--tf-text-dim);
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    padding:7px 13px; border-radius:999px;
+  }
+  .footer-nav a.current{color:var(--tf-blue-light); border-color:rgba(0,123,255,0.35);}
+
+  .wa-float{
+    position:fixed;
+    right:16px; bottom:16px;
+    width:56px; height:56px;
+    background:#25D366;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 12px 28px -8px rgba(0,0,0,0.6);
+    z-index:40;
+    text-decoration:none;
+  }
+  .wa-float svg{width:28px; height:28px; color:#fff;}
+  .wa-float:hover{filter:brightness(1.08);}
+  .wa-float::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    background:#25D366;
+    opacity:0.5;
+    animation:waPing 2.4s ease-out infinite;
+    z-index:-1;
+  }
+  @keyframes waPing{
+    0%{transform:scale(1); opacity:0.45;}
+    80%{transform:scale(1.7); opacity:0;}
+    100%{opacity:0;}
+  }
+  @media (prefers-reduced-motion: reduce){ .wa-float::before{animation:none; display:none;} }
 </style>
 </head>
 <body>
@@ -624,11 +692,19 @@
   </div>
 
   <footer>
+    <div class="footer-nav">
+      <a href="cotizador.html" class="current">Cotizador</a>
+      <a href="politicas.html">Pol&iacute;ticas</a>
+    </div>
     <div class="footer-logo">TECH <span>FIX</span></div>
     <p>Villa Mar&iacute;a, C&oacute;rdoba</p>
     <p><a href="https://wa.me/5493534132871" target="_blank" rel="noopener">WhatsApp 3534 13-2871</a></p>
     <p style="margin-top:10px; opacity:0.6;">&copy; Tech Fix &mdash; Todos los derechos reservados</p>
   </footer>
+
+  <a href="https://wa.me/5493534132871?text=Hola!%20Tengo%20una%20consulta%20sobre%20la%20reparaci%C3%B3n%20de%20mi%20celular." target="_blank" rel="noopener" class="wa-float" aria-label="Contactar por WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.8 14.2c-.2.6-1.4 1.2-2 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-5-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.9 1.4 1.9 2.3 1.3 1.1 2.3 1.5 2.7 1.7.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1l1.7.8c.2.1.4.2.4.3.1.2.1.9-.1 1.5z"/></svg>
+  </a>
 
 <script>
   const NUMERO_WHATSAPP = "5493534132871";
