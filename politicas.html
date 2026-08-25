@@ -6,7 +6,7 @@
 <title>Pol&iacute;ticas de Reparaci&oacute;n - Tech Fix</title>
 <meta name="description" content="Conoc&eacute; c&oacute;mo trabajamos en Tech Fix: tiempos de reparaci&oacute;n, garant&iacute;a, calidad de repuestos y qu&eacute; necesitamos de vos.">
 <meta name="theme-color" content="#0A0A0A">
-<link rel="icon" type="image/png" href="favicon-32.png">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAD0klEQVR4nO2X3WtcVRTFf/vcOzMxEQxY1Aim0fgRCUQw2EieCsVopelzkCKhf4D4rEGIjxofhPwL0lRSrQ+2QmMTtRYfVERJCagEfWghGWut+ZjM3HOWDzc3Jp2vJATqgwsOM5c5++519l5n7z0GiLsIdzed/ycIxM02OHdwHCUh7cy40UADZlZlcNCoGwHnHCEEOjo6iKJoB5GMmJkBVH3P9mQIIRDHMaVSiaWlpR0Hq0kgjmOSJGF0dJTJyUkk7SsVZkYIAYByuczQ0BDLy8tVkdX25ZwToL6+Pq2srChJEiVJIu+9tsN733RltpI0MjIiQFEU6Q6f/z6YmcxMhw8fVrFY1J0IIWy9fC8YGxsToDiO73SuHSLM8t7b28vAwAClUmkr/4VCgYmJCdrb2wGYmjrLhYsX8JUE1dKxhJljbW2N85+cx5mlHmuIuopVrdXV1aVyuSxJmp2d25XN1inzLcJVhT6NSi3xOOe2RJcJcnh4mFwuB8BH56ZxGPe8/inlB56AkIBzIKVB9UAClD1yBbT4PeHcq0gb6Z5tEatJIISwpV5JeO8ZHBwEIPGBrz7/jHD/45SeOo7fACK2KooFUAJUgFawW6sw8zaqrIO5Hc6hSSk2M7z35PN5+vv7Afh1cZFrC79gz5xAlYCtlzAPrgKWAB7Mp0Tc+ho2dQIVfwKLQKHKR8NSnN3Xnp4eOjs7Abh65WvKgtyTx6msO6zQgs28g36cBheDPIT0lFq9hW7+nJ5cvqaPhgSyWzEwMEChUEDA5UsXwfJw6AiUwMobMPsuWi3WOYWrefJdEciuTJb/P27+ydW5GXhkEG/3YesJsgru5Ps4BBgEjxVa4bsz+Gsfg1nDiaMugSz/LS0t9Pf3kyQJ8/PXWLxexB07idZAGwnkC/juV1KjAOTBLS+j314DtKn6+qgS4fYm4pzDe8/CwgJxHPPl3GUERA+9AH+DbeSxJIfdBrsNrIItefjwZbRyPX19EwJVEcjCnjWgSqXC+Pg4Qy++xJW5S5B/ELU9jcpgyV/Y/Acgn3bEXA678Q1h+du6wqvV4htWsaw5vfHmW3r04Xbx2Cm50xKjQe7o2dp25vZSKXdRSs0UxXlFIDt6RjbiZack6z4tXCyilvTTxcJql9x6q+lIlqYDfFKGfBt273PIO1zpNroxA2Gz6jS4ao2wuynDHAZYex+0duOKP6AvjqG13wHbt/MMzUNlaR93z74nd2RaFrVt/ranXO9fA2wKyx16ftvz3nJdbzWcimvDNjvfHs3qYG+TZtZOD3BU30cEDhZ3/a/Z/wT+AWXQ1rcvXjdzAAAAAElFTkSuQmCC">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="https://fonts.gstatic.com/s/bebasneue/v16/JTUSjIg69CK48gW7PXooxW4.ttf" as="font" type="font/ttf" crossorigin>
@@ -46,7 +46,13 @@
     display:flex; align-items:center; justify-content:space-between; gap:12px;
   }
   .brand{display:flex; align-items:center; gap:9px;}
-  .brand svg{width:28px; height:28px;}
+  .brand-badge{
+    width:36px; height:36px; flex-shrink:0;
+    background:#000; border:1px solid rgba(0,168,255,0.35); border-radius:9px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 18px -6px rgba(0,123,255,0.5);
+  }
+  .brand-badge img{width:24px; height:24px;}
   .brand-text{font-weight:700; font-size:15px;}
   .brand-text span{color:var(--tf-blue-light);}
   .back-link{
@@ -139,7 +145,9 @@
   <div class="topbar">
     <div class="topbar-inner">
       <div class="brand">
-        <img src="favicon-64.png" alt="Tech Fix" width="28" height="28">
+        <div class="brand-badge">
+          <img src="favicon-64.png" alt="Tech Fix" width="24" height="24">
+        </div>
         <span class="brand-text">TECH <span>FIX</span></span>
       </div>
       <a href="index.html" class="back-link">
