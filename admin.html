@@ -160,40 +160,16 @@
   .tabs{
     display:flex; gap:6px; padding:0 1.25rem; max-width:760px; margin:0 auto;
     border-bottom:1px solid rgba(255,255,255,0.08);
+    overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
   }
+  .tabs::-webkit-scrollbar{display:none;}
   .tab{
     background:transparent; border:none; color:var(--tf-text-dim);
-    font-weight:600; font-size:13px; padding:12px 6px; cursor:pointer;
+    font-weight:600; font-size:13px; padding:12px 6px; cursor:pointer; white-space:nowrap;
     border-bottom:2px solid transparent; margin-bottom:-1px;
   }
   .tab.active{color:var(--tf-blue-light); border-bottom-color:var(--tf-blue-light);}
 
-  .foto-intro{
-    background:rgba(0,123,255,0.06); border:1px solid rgba(0,123,255,0.2);
-    border-radius:12px; padding:12px 14px; margin-bottom:1.25rem;
-  }
-  .foto-intro p{margin:0; font-size:12px; color:#cfcfcf; line-height:1.7;}
-
-  .foto-form{
-    background:var(--tf-gray); border:1px solid rgba(255,255,255,0.07);
-    border-radius:16px; padding:1.1rem; margin-bottom:1.25rem;
-  }
-  .foto-upload-row{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;}
-  .foto-upload input[type="file"]{display:none;}
-  .foto-preview{
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
-    aspect-ratio:1/1;
-    background:#101010; border:1.5px dashed #333; border-radius:12px;
-    color:var(--tf-text-dim); font-size:11px; text-align:center; cursor:pointer;
-    overflow:hidden; padding:8px;
-  }
-  .foto-preview svg{width:22px; height:22px;}
-  .foto-preview img{width:100%; height:100%; object-fit:cover; border-radius:8px;}
-  .foto-form input[type="text"]{
-    width:100%; background:#101010; border:1px solid #333; color:#fff;
-    border-radius:10px; padding:11px 13px; font-size:13.5px; margin-bottom:10px;
-  }
-  .foto-form input[type="text"]:focus{outline:none; border-color:var(--tf-blue-light);}
   .btn-main{
     width:100%;
     background:linear-gradient(135deg, var(--tf-blue) 0%, var(--tf-blue-dark) 100%);
@@ -202,30 +178,107 @@
     box-shadow:0 10px 22px -10px rgba(0,123,255,0.6);
   }
   .btn-main:hover{box-shadow:0 14px 28px -8px rgba(0,123,255,0.75);}
+  .btn-main:disabled{opacity:0.55; cursor:default; box-shadow:none;}
 
-  .trabajo-item{
-    display:flex; align-items:center; gap:10px;
+  .toggle-form-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; background:rgba(0,123,255,0.08); color:var(--tf-blue-light);
+    border:1px dashed rgba(0,123,255,0.4); border-radius:12px;
+    padding:12px; font-weight:600; font-size:13px; cursor:pointer; margin-bottom:1rem;
+  }
+  .toggle-form-btn:hover{background:rgba(0,123,255,0.14);}
+  .toggle-form-btn svg{width:15px; height:15px;}
+
+  .manual-form{
+    background:var(--tf-gray); border:1px solid rgba(0,123,255,0.2);
+    border-radius:16px; padding:1.1rem; margin-bottom:1.25rem;
+    display:none;
+  }
+  .manual-form.open{display:block;}
+  .manual-form .form-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .manual-form label{font-size:11px; font-weight:600; color:var(--tf-text-dim); display:block; margin-bottom:4px;}
+  .manual-form .field-mini{margin-bottom:10px;}
+  .manual-form input[type="text"], .manual-form input[type="number"], .manual-form input[type="tel"], .manual-form select{
+    width:100%; background:#101010; border:1px solid #333; color:#fff;
+    border-radius:10px; padding:10px 12px; font-size:13.5px;
+  }
+  .manual-form input:focus, .manual-form select:focus{outline:none; border-color:var(--tf-blue-light);}
+  .manual-form select{
+    appearance:none; -webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239BA3AF' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 10px center; padding-right:26px;
+  }
+
+  .inv-card{
     background:var(--tf-gray); border:1px solid rgba(255,255,255,0.07);
-    border-radius:12px; padding:10px 12px; margin-bottom:8px;
+    border-radius:14px; padding:14px 16px; margin-bottom:10px;
   }
-  .trabajo-item img{width:38px; height:38px; border-radius:8px; object-fit:cover; flex-shrink:0;}
-  .trabajo-item .cap{flex:1; font-size:12.5px; color:#e4e4e4;}
-  .trabajo-item button{
-    background:transparent; border:1px solid rgba(245,166,35,0.4); color:var(--tf-amber);
-    border-radius:8px; padding:6px 10px; font-size:11px; cursor:pointer;
+  .inv-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px;}
+  .inv-titulo{font-weight:700; font-size:14.5px;}
+  .inv-fecha{font-size:10.5px; color:var(--tf-text-dim);}
+  .inv-badge{
+    font-size:10.5px; font-weight:700; padding:4px 9px; border-radius:999px;
+    border:1px solid; white-space:nowrap;
+  }
+  .inv-badge.reparacion{color:var(--tf-amber); border-color:rgba(245,166,35,0.4); background:rgba(245,166,35,0.08);}
+  .inv-badge.listo{color:var(--tf-blue-light); border-color:rgba(0,168,255,0.4); background:rgba(0,168,255,0.08);}
+  .inv-badge.vendido{color:#4ade80; border-color:rgba(74,222,128,0.4); background:rgba(74,222,128,0.08);}
+  .inv-falla{font-size:12px; color:#cfcfcf; margin-bottom:8px;}
+
+  .inv-money-row{display:flex; justify-content:space-between; font-size:12px; color:var(--tf-text-dim); padding:3px 0;}
+  .inv-money-row b{color:#fff; font-weight:700;}
+  .inv-total-row{
+    display:flex; justify-content:space-between; font-size:13px; font-weight:700;
+    border-top:1px solid rgba(255,255,255,0.08); margin-top:6px; padding-top:8px;
+  }
+  .inv-total-row .val{color:var(--tf-blue-light); font-family:'Bebas Neue',sans-serif; font-size:1.2rem;}
+
+  .gasto-chip{
+    display:inline-flex; align-items:center; gap:6px;
+    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+    border-radius:999px; padding:5px 10px; font-size:11px; margin:3px 4px 3px 0;
+  }
+  .gasto-chip button{background:none; border:none; color:var(--tf-amber); cursor:pointer; font-size:12px; padding:0; line-height:1;}
+
+  .inv-gasto-form{display:flex; gap:6px; margin-top:8px;}
+  .inv-gasto-form input{
+    background:#101010; border:1px solid #333; color:#fff; border-radius:8px;
+    padding:8px 10px; font-size:12px;
+  }
+  .inv-gasto-form input.concepto{flex:2; min-width:0;}
+  .inv-gasto-form input.monto{flex:1; min-width:0;}
+  .inv-gasto-form button{
+    background:rgba(0,123,255,0.15); border:1px solid rgba(0,123,255,0.35); color:var(--tf-blue-light);
+    border-radius:8px; padding:0 12px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;
   }
 
-  .section-title-sm{font-size:12px; font-weight:700; color:var(--tf-text-dim); margin:1.25rem 0 8px; text-transform:uppercase; letter-spacing:0.06em;}
-  #codigoOutput{
-    width:100%; min-height:160px; background:#0e0e0e; color:#8fd3ff;
-    border:1px solid #333; border-radius:10px; padding:12px; font-size:11px;
-    font-family:monospace; line-height:1.5;
+  .inv-actions{display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap;}
+  .inv-estado-select{
+    font-size:11.5px; font-weight:700; border-radius:8px; padding:7px 10px; border:1px solid #333;
+    background:#101010; color:#fff; cursor:pointer;
   }
-  .copy-ok{
-    text-align:center; color:#4ade80; font-size:12px; font-weight:600;
-    margin-top:8px; opacity:0; transition:opacity 0.2s ease;
+  .inv-delete{
+    background:transparent; border:1px solid rgba(245,166,35,0.3); color:var(--tf-amber);
+    border-radius:8px; padding:7px 11px; font-size:11px; cursor:pointer; margin-left:auto;
   }
-  .copy-ok.show{opacity:1;}
+
+  .venta-box{
+    display:flex; gap:8px; margin-top:10px; align-items:center; flex-wrap:wrap;
+    background:rgba(0,123,255,0.06); border:1px solid rgba(0,123,255,0.25);
+    border-radius:10px; padding:10px;
+  }
+  .venta-box input{
+    background:#101010; border:1px solid #333; color:#fff; border-radius:8px;
+    padding:8px 10px; font-size:12px; width:120px;
+  }
+  .venta-box button{
+    background:var(--tf-blue); border:none; color:#fff; font-weight:700; font-size:12px;
+    border-radius:8px; padding:8px 12px; cursor:pointer;
+  }
+  .venta-resultado{font-size:12px; margin-top:8px;}
+  .venta-resultado b{font-family:'Bebas Neue',sans-serif; font-size:1.1rem;}
+  .venta-resultado.pos b{color:#4ade80;}
+  .venta-resultado.neg b{color:var(--tf-amber);}
 
   .empty-state{
     text-align:center; padding:3rem 1rem; color:var(--tf-text-dim);
@@ -237,6 +290,83 @@
     max-width:760px; margin:0 auto; padding:0 1.25rem 2rem;
     font-size:11.5px; color:var(--tf-text-dim); text-align:center; line-height:1.6;
   }
+
+  /* ---- Clientes ---- */
+  .cli-card{
+    background:var(--tf-gray); border:1px solid rgba(255,255,255,0.07);
+    border-radius:14px; padding:14px 16px; margin-bottom:10px;
+  }
+  .cli-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .cli-nombre{font-weight:700; font-size:14.5px;}
+  .cli-empresa{font-size:11.5px; color:var(--tf-text-dim); margin-top:1px;}
+  .cli-info{font-size:12px; color:#cfcfcf; margin-top:8px; line-height:1.7;}
+  .cli-notas{font-size:11.5px; color:var(--tf-text-dim); margin-top:6px; font-style:italic;}
+  .cli-actions{display:flex; gap:8px; margin-top:10px;}
+  .cli-actions button{
+    background:transparent; border:1px solid rgba(255,255,255,0.12); color:var(--tf-text-dim);
+    border-radius:8px; padding:6px 11px; font-size:11px; cursor:pointer;
+  }
+  .cli-actions button:hover{border-color:rgba(0,123,255,0.4); color:#fff;}
+  .cli-actions button.danger{border-color:rgba(245,166,35,0.3); color:var(--tf-amber);}
+  .cli-count{font-size:10.5px; color:var(--tf-blue-light); background:rgba(0,123,255,0.1); padding:3px 8px; border-radius:999px; white-space:nowrap;}
+
+  /* ---- \u00d3rdenes ---- */
+  .ord-card{
+    background:var(--tf-gray); border:1px solid rgba(255,255,255,0.07);
+    border-radius:14px; padding:14px 16px; margin-bottom:10px;
+  }
+  .ord-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:4px;}
+  .ord-folio{font-family:'Bebas Neue',sans-serif; font-size:1.1rem; color:var(--tf-blue-light); letter-spacing:0.03em;}
+  .ord-cliente{font-weight:700; font-size:13.5px; margin-top:2px;}
+  .ord-equipo{font-size:12px; color:#cfcfcf;}
+  .ord-falla{font-size:12px; color:var(--tf-text-dim); margin-top:6px;}
+  .ord-badge{font-size:10.5px; font-weight:700; padding:4px 9px; border-radius:999px; border:1px solid; white-space:nowrap;}
+  .ord-badge.pendiente{color:#94a3b8; border-color:#334155; background:rgba(148,163,184,0.08);}
+  .ord-badge.en_progreso{color:var(--tf-amber); border-color:rgba(245,166,35,0.4); background:rgba(245,166,35,0.08);}
+  .ord-badge.esperando_repuesto{color:#f87171; border-color:rgba(248,113,113,0.4); background:rgba(248,113,113,0.08);}
+  .ord-badge.finalizada{color:var(--tf-blue-light); border-color:rgba(0,168,255,0.4); background:rgba(0,168,255,0.08);}
+  .ord-badge.entregada{color:#4ade80; border-color:rgba(74,222,128,0.4); background:rgba(74,222,128,0.08);}
+  .ord-meta{display:flex; flex-wrap:wrap; gap:10px; font-size:11px; color:var(--tf-text-dim); margin-top:8px;}
+  .ord-precio{font-family:'Bebas Neue',sans-serif; font-size:1.2rem; color:#fff;}
+  .ord-actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; align-items:center;}
+  .ord-actions select{
+    font-size:11px; font-weight:700; border-radius:8px; padding:7px 9px; border:1px solid #333;
+    background:#101010; color:#fff; cursor:pointer;
+  }
+  .ord-actions button{
+    background:transparent; border:1px solid rgba(255,255,255,0.12); color:var(--tf-text-dim);
+    border-radius:8px; padding:7px 10px; font-size:11px; cursor:pointer; display:inline-flex; align-items:center; gap:4px;
+  }
+  .ord-actions button:hover{border-color:rgba(0,123,255,0.4); color:#fff;}
+  .ord-actions button.danger{border-color:rgba(245,166,35,0.3); color:var(--tf-amber);}
+  .ord-actions button svg{width:13px; height:13px;}
+
+  .firma-box{margin-top:10px; display:none;}
+  .firma-box.open{display:block;}
+  .firma-box canvas{
+    width:100%; height:150px; background:#fff; border-radius:10px; touch-action:none; display:block;
+  }
+  .firma-actions{display:flex; gap:8px; margin-top:8px;}
+  .firma-actions button{
+    flex:1; font-size:11.5px; font-weight:700; padding:8px; border-radius:8px; cursor:pointer;
+  }
+  .firma-actions .fa-limpiar{background:transparent; border:1px solid rgba(255,255,255,0.15); color:var(--tf-text-dim);}
+  .firma-actions .fa-guardar{background:var(--tf-blue); border:none; color:#fff;}
+  .firma-ok{color:#4ade80; font-size:11px; font-weight:600; margin-top:6px;}
+
+  /* ---- Reportes ---- */
+  .rep-block{
+    background:var(--tf-gray); border:1px solid rgba(255,255,255,0.07);
+    border-radius:14px; padding:16px; margin-bottom:14px;
+  }
+  .rep-block h3{font-family:'Bebas Neue',sans-serif; font-size:1.2rem; margin:0 0 12px; letter-spacing:0.02em;}
+  .rep-row{margin-bottom:10px;}
+  .rep-row-top{display:flex; justify-content:space-between; font-size:11.5px; margin-bottom:4px;}
+  .rep-row-top span:first-child{color:#e4e4e4;}
+  .rep-row-top span:last-child{color:var(--tf-text-dim);}
+  .rep-bar{height:7px; background:#101010; border-radius:999px; overflow:hidden;}
+  .rep-bar-fill{height:100%; background:linear-gradient(90deg, var(--tf-blue), var(--tf-blue-light)); border-radius:999px;}
+  .rep-empty{font-size:12px; color:var(--tf-text-dim);}
 </style>
 </head>
 <body>
@@ -268,7 +398,10 @@
 
     <div class="tabs">
       <button class="tab active" data-tab="tabConsultas" onclick="cambiarTab('tabConsultas')">Consultas</button>
-      <button class="tab" data-tab="tabFotos" onclick="cambiarTab('tabFotos')">Fotos de trabajos</button>
+      <button class="tab" data-tab="tabOrdenes" onclick="cambiarTab('tabOrdenes')">&Oacute;rdenes</button>
+      <button class="tab" data-tab="tabClientes" onclick="cambiarTab('tabClientes')">Clientes</button>
+      <button class="tab" data-tab="tabInventario" onclick="cambiarTab('tabInventario')">Inventario</button>
+      <button class="tab" data-tab="tabReportes" onclick="cambiarTab('tabReportes')">Reportes</button>
     </div>
 
     <main id="tabConsultas">
@@ -276,6 +409,44 @@
         <div class="stat"><p class="n display" id="statTotal">0</p><p class="l">Consultas totales</p></div>
         <div class="stat"><p class="n display" id="statHoy">0</p><p class="l">Consultas de hoy</p></div>
         <div class="stat"><p class="n display" id="statPendientes">0</p><p class="l">Pendientes</p></div>
+      </div>
+
+      <button class="toggle-form-btn" onclick="toggleManualForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Cargar presupuesto manual
+      </button>
+
+      <div class="manual-form" id="manualForm">
+        <div class="form-row">
+          <div class="field-mini">
+            <label>Cliente</label>
+            <input type="text" id="manCliente" placeholder="Nombre (opcional)">
+          </div>
+          <div class="field-mini">
+            <label>Tel&eacute;fono</label>
+            <input type="tel" id="manTelefono" placeholder="Opcional">
+          </div>
+        </div>
+        <div class="field-mini">
+          <label>Equipo (marca y modelo)</label>
+          <input type="text" id="manEquipo" placeholder='Ej: "Samsung A13"'>
+        </div>
+        <div class="form-row">
+          <div class="field-mini">
+            <label>Falla</label>
+            <select id="manFalla">
+              <option value="M\u00f3dulo / Pantalla">M&oacute;dulo / Pantalla</option>
+              <option value="Cambio de bater\u00eda">Cambio de bater&iacute;a</option>
+              <option value="Placa de carga">Placa de carga</option>
+              <option value="Otra falla / consulta general">Otra / consulta general</option>
+            </select>
+          </div>
+          <div class="field-mini">
+            <label>Precio</label>
+            <input type="text" id="manPrecio" placeholder='Ej: "63000" o "Consultar"'>
+          </div>
+        </div>
+        <button class="btn-main" onclick="agregarPresupuestoManual()">Guardar presupuesto</button>
       </div>
 
       <div class="filter-row" id="filtroEstado">
@@ -293,46 +464,176 @@
       <div id="lista"></div>
     </main>
 
-    <main id="tabFotos" style="display:none;">
-      <div class="foto-intro">
-        <p><b>C&oacute;mo funciona:</b> esta p&aacute;gina es est&aacute;tica (no tiene un servidor propio para guardar fotos), as&iacute; que no hay un "bot&oacute;n m&aacute;gico" que las suba solas al sitio. Lo que hace este apartado es: eleg&iacute;s las fotos de antes/despu&eacute;s, las comprime autom&aacute;ticamente para que no pesen, y te genera el c&oacute;digo listo. Despu&eacute;s solo cop&iacute;alo y peg&aacute;lo en tu archivo <code>galeria.html</code> (reemplazando las tarjetas de ejemplo) y volv&eacute;s a subir ese archivo a tu hosting.</p>
+    <main id="tabInventario" style="display:none;">
+      <div class="stats">
+        <div class="stat"><p class="n display" id="invStatInvertido">$0</p><p class="l">Invertido en stock</p></div>
+        <div class="stat"><p class="n display" id="invStatGanancia">$0</p><p class="l">Ganancia total</p></div>
+        <div class="stat"><p class="n display" id="invStatStock">0</p><p class="l">Equipos en stock</p></div>
       </div>
 
-      <div class="foto-form">
-        <div class="foto-upload-row">
-          <label class="foto-upload" for="fileAntes">
-            <input type="file" id="fileAntes" accept="image/*" onchange="previsualizar('fileAntes','prevAntes')">
-            <span id="prevAntes" class="foto-preview">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>
-              Foto "antes"
-            </span>
-          </label>
-          <label class="foto-upload" for="fileDespues">
-            <input type="file" id="fileDespues" accept="image/*" onchange="previsualizar('fileDespues','prevDespues')">
-            <span id="prevDespues" class="foto-preview">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>
-              Foto "despu&eacute;s"
-            </span>
-          </label>
+      <button class="toggle-form-btn" onclick="toggleInvForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Cargar equipo comprado
+      </button>
+
+      <div class="manual-form" id="invForm">
+        <div class="field-mini">
+          <label>Equipo (marca y modelo)</label>
+          <input type="text" id="invEquipo" placeholder='Ej: "Motorola G20"'>
         </div>
-        <input type="text" id="inputCaption" placeholder='Descripci&oacute;n. Ej: "Cambio de m&oacute;dulo - Samsung A13"'>
-        <button class="btn-main" onclick="agregarTrabajo()">Agregar a la lista</button>
+        <div class="form-row">
+          <div class="field-mini">
+            <label>Falla que tiene</label>
+            <input type="text" id="invFalla" placeholder='Ej: "Pantalla rota"'>
+          </div>
+          <div class="field-mini">
+            <label>Precio de compra</label>
+            <input type="number" id="invPrecioCompra" placeholder="0">
+          </div>
+        </div>
+        <button class="btn-main" onclick="agregarEquipoInventario()">Agregar equipo</button>
       </div>
 
-      <div id="listaTrabajos"></div>
-
-      <div id="codigoWrap" style="display:none;">
-        <div class="section-title-sm">C&oacute;digo listo para pegar en galeria.html</div>
-        <textarea id="codigoOutput" readonly></textarea>
-        <button class="btn-refresh" onclick="copiarCodigo()" style="width:100%; justify-content:center; margin-top:8px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-          Copiar c&oacute;digo
-        </button>
-        <p class="copy-ok" id="copyOk">&iexcl;Copiado!</p>
+      <div class="filter-row" id="filtroInv">
+        <button class="filter-chip active" data-filtro="todos" onclick="setFiltroInv('todos')">Todos</button>
+        <button class="filter-chip" data-filtro="reparacion" onclick="setFiltroInv('reparacion')">En reparaci&oacute;n</button>
+        <button class="filter-chip" data-filtro="listo" onclick="setFiltroInv('listo')">Listo para vender</button>
+        <button class="filter-chip" data-filtro="vendido" onclick="setFiltroInv('vendido')">Vendido</button>
       </div>
+
+      <div id="listaInventario"></div>
     </main>
 
-    <p class="config-note">Los datos se leen en vivo desde la hoja de consultas de Google Sheets. El estado de cada consulta (pendiente / en reparaci&oacute;n / entregado) se guarda solo en este navegador &mdash; si necesit&aacute;s verlo desde varios dispositivos, avisame y te agrego la sincronizaci&oacute;n con la hoja.</p>
+    <main id="tabOrdenes" style="display:none;">
+      <div class="stats">
+        <div class="stat"><p class="n display" id="ordStatTotal">0</p><p class="l">&Oacute;rdenes totales</p></div>
+        <div class="stat"><p class="n display" id="ordStatAbiertas">0</p><p class="l">Abiertas</p></div>
+        <div class="stat"><p class="n display" id="ordStatFacturado">$0</p><p class="l">Facturado</p></div>
+      </div>
+
+      <button class="toggle-form-btn" onclick="toggleOrdForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Nueva orden de servicio
+      </button>
+
+      <div class="manual-form" id="ordForm">
+        <div class="form-row">
+          <div class="field-mini">
+            <label>Cliente</label>
+            <input type="text" id="ordCliente" list="listaClientesDatalist" placeholder="Nombre del cliente">
+            <datalist id="listaClientesDatalist"></datalist>
+          </div>
+          <div class="field-mini">
+            <label>Tel&eacute;fono</label>
+            <input type="tel" id="ordTelefono" placeholder="Opcional">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field-mini">
+            <label>Equipo</label>
+            <input type="text" id="ordEquipo" placeholder='Ej: "iPhone 12"'>
+          </div>
+          <div class="field-mini">
+            <label>IMEI (opcional)</label>
+            <input type="text" id="ordImei" placeholder="35-xxxxxx-xxxxxx-x">
+          </div>
+        </div>
+        <div class="field-mini">
+          <label>Falla / motivo de ingreso</label>
+          <input type="text" id="ordFalla" placeholder='Ej: "Pantalla rota"'>
+        </div>
+        <div class="form-row">
+          <div class="field-mini">
+            <label>T&eacute;cnico (opcional)</label>
+            <input type="text" id="ordTecnico" placeholder="Qui&eacute;n la repara">
+          </div>
+          <div class="field-mini">
+            <label>Presupuesto</label>
+            <input type="number" id="ordPresupuesto" placeholder="0">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field-mini">
+            <label>Entrega estimada</label>
+            <input type="date" id="ordEntrega">
+          </div>
+          <div class="field-mini">
+            <label>Garant&iacute;a (d&iacute;as)</label>
+            <input type="number" id="ordGarantia" placeholder="30" value="30">
+          </div>
+        </div>
+        <div class="field-mini">
+          <label>Notas internas</label>
+          <input type="text" id="ordNotas" placeholder="Opcional">
+        </div>
+        <button class="btn-main" onclick="agregarOrden()">Guardar orden</button>
+      </div>
+
+      <div class="filter-row" id="filtroOrd">
+        <button class="filter-chip active" data-filtro="todas" onclick="setFiltroOrd('todas')">Todas</button>
+        <button class="filter-chip" data-filtro="pendiente" onclick="setFiltroOrd('pendiente')">Pendiente</button>
+        <button class="filter-chip" data-filtro="en_progreso" onclick="setFiltroOrd('en_progreso')">En progreso</button>
+        <button class="filter-chip" data-filtro="esperando_repuesto" onclick="setFiltroOrd('esperando_repuesto')">Esperando repuesto</button>
+        <button class="filter-chip" data-filtro="finalizada" onclick="setFiltroOrd('finalizada')">Finalizada</button>
+        <button class="filter-chip" data-filtro="entregada" onclick="setFiltroOrd('entregada')">Entregada</button>
+      </div>
+
+      <div id="listaOrdenes"></div>
+    </main>
+
+    <main id="tabClientes" style="display:none;">
+      <div class="stats">
+        <div class="stat"><p class="n display" id="cliStatTotal">0</p><p class="l">Clientes</p></div>
+        <div class="stat"><p class="n display" id="cliStatOrdenes">0</p><p class="l">&Oacute;rdenes vinculadas</p></div>
+      </div>
+
+      <button class="toggle-form-btn" onclick="toggleCliForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Nuevo cliente
+      </button>
+
+      <div class="manual-form" id="cliForm">
+        <div class="field-mini">
+          <label>Nombre completo</label>
+          <input type="text" id="cliNombre" placeholder="Nombre y apellido">
+        </div>
+        <div class="field-mini">
+          <label>Empresa (opcional)</label>
+          <input type="text" id="cliEmpresa" placeholder="Opcional">
+        </div>
+        <div class="form-row">
+          <div class="field-mini">
+            <label>Tel&eacute;fono</label>
+            <input type="tel" id="cliTelefono" placeholder="Opcional">
+          </div>
+          <div class="field-mini">
+            <label>Email</label>
+            <input type="text" id="cliEmail" placeholder="Opcional">
+          </div>
+        </div>
+        <div class="field-mini">
+          <label>Direcci&oacute;n (opcional)</label>
+          <input type="text" id="cliDireccion" placeholder="Opcional">
+        </div>
+        <div class="field-mini">
+          <label>Notas</label>
+          <input type="text" id="cliNotas" placeholder="Opcional">
+        </div>
+        <button class="btn-main" onclick="agregarCliente()">Guardar cliente</button>
+      </div>
+
+      <div class="search-row">
+        <input type="text" id="inputBuscarCliente" placeholder="Buscar por nombre, empresa o email..." oninput="renderClientes()">
+      </div>
+
+      <div id="listaClientes"></div>
+    </main>
+
+    <main id="tabReportes" style="display:none;">
+      <div id="reportesContenido"></div>
+    </main>
+
+    <p class="config-note">Los datos de Consultas se leen en vivo desde la hoja de Google Sheets; lo que carg&aacute;s ac&aacute; como "presupuesto manual" se env&iacute;a a esa misma hoja. Todo lo dem&aacute;s (estado de consultas, Inventario, &Oacute;rdenes, Clientes) se guarda solo en este navegador &mdash; si necesit&aacute;s verlo desde varios dispositivos, avisame y te agrego la sincronizaci&oacute;n con la hoja.</p>
   </div>
 
 <script>
@@ -345,6 +646,10 @@
   // cada consulta, publicada como CSV (Archivo > Compartir > Publicar
   // en la web > eleg\u00ed esa hoja espec\u00edfica > formato CSV).
   const URL_CSV_CONSULTAS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSjUf3sv0MjaNYEeX-1j5Vats3KSY8gBpo1HpNwZq4CH2CYa9JK9GThzs3rk5_W5csMKm-AEYeb2Pex/pub?output=csv";
+
+  // Mismo Apps Script al que el cotizador env&iacute;a las consultas nuevas;
+  // el bot&oacute;n "Cargar presupuesto manual" escribe ac&aacute; tambi&eacute;n.
+  const URL_WEB_APP_SHEETS = "https://script.google.com/macros/s/AKfycbymTI-bPSNgBUXAqKMLfJlWtw4PDjc_Xc7qG5-rnoE-gRLW_wct4aYlNkJQPy3OONpo/exec";
   // -----------------------------------------------------------------
 
   let consultas = [];
@@ -540,118 +845,760 @@
   // ---------------- Pesta\u00f1as ----------------
   function cambiarTab(id){
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === id));
-    document.getElementById('tabConsultas').style.display = id === 'tabConsultas' ? '' : 'none';
-    document.getElementById('tabFotos').style.display = id === 'tabFotos' ? '' : 'none';
-  }
-
-  // ---------------- Fotos de trabajos ----------------
-  let trabajos = [];
-  let imgAntesData = null;
-  let imgDespuesData = null;
-
-  function comprimirImagen(file, maxAncho){
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const escala = Math.min(1, maxAncho / img.width);
-          const canvas = document.createElement('canvas');
-          canvas.width = img.width * escala;
-          canvas.height = img.height * escala;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL('image/jpeg', 0.72));
-        };
-        img.onerror = reject;
-        img.src = e.target.result;
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
+    ['tabConsultas', 'tabOrdenes', 'tabClientes', 'tabInventario', 'tabReportes'].forEach(tabId => {
+      document.getElementById(tabId).style.display = id === tabId ? '' : 'none';
     });
+    if (id === 'tabInventario') renderInventario();
+    if (id === 'tabOrdenes') renderOrdenes();
+    if (id === 'tabClientes') renderClientes();
+    if (id === 'tabReportes') renderReportes();
   }
 
-  async function previsualizar(inputId, previewId){
-    const input = document.getElementById(inputId);
-    const preview = document.getElementById(previewId);
-    if (!input.files || !input.files[0]) return;
-    const dataUrl = await comprimirImagen(input.files[0], 700);
-    if (inputId === 'fileAntes') imgAntesData = dataUrl; else imgDespuesData = dataUrl;
-    preview.innerHTML = `<img src="${dataUrl}" alt="">`;
+  // ---------------- Presupuesto manual ----------------
+  function toggleManualForm(){
+    document.getElementById('manualForm').classList.toggle('open');
   }
 
-  function agregarTrabajo(){
-    const caption = document.getElementById('inputCaption').value.trim();
-    if (!imgAntesData || !imgDespuesData) {
-      alert('Falta cargar la foto de "antes" y/o "despu\u00e9s".');
+  function agregarPresupuestoManual(){
+    const cliente = document.getElementById('manCliente').value.trim() || 'Presupuesto en local';
+    const telefono = document.getElementById('manTelefono').value.trim();
+    const equipo = document.getElementById('manEquipo').value.trim();
+    const falla = document.getElementById('manFalla').value;
+    const precio = document.getElementById('manPrecio').value.trim();
+
+    if (!equipo || !precio) {
+      alert('Complet\u00e1 al menos el equipo y el precio.');
       return;
     }
-    if (!caption) {
-      alert('Agreg\u00e1 una descripci\u00f3n corta del trabajo.');
+
+    const nuevaConsulta = {
+      id: Date.now(),
+      fecha: new Date().toLocaleString('es-AR'),
+      cliente: cliente,
+      telefono: telefono,
+      equipo: equipo,
+      falla: falla,
+      precio: precio
+    };
+
+    if (URL_WEB_APP_SHEETS && URL_WEB_APP_SHEETS.includes('script.google.com')) {
+      try {
+        fetch(URL_WEB_APP_SHEETS, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(nuevaConsulta),
+          keepalive: true
+        });
+      } catch (err) { console.error('Error al guardar en Sheets:', err); }
+    }
+
+    // Lo mostramos ya mismo en la lista (la hoja publicada tarda unos minutos en reflejarlo).
+    consultas.unshift(nuevaConsulta);
+    renderLista();
+
+    document.getElementById('manCliente').value = '';
+    document.getElementById('manTelefono').value = '';
+    document.getElementById('manEquipo').value = '';
+    document.getElementById('manPrecio').value = '';
+    document.getElementById('manualForm').classList.remove('open');
+  }
+
+  // ---------------- Inventario (compra / gastos / venta) ----------------
+  let filtroInvActivo = 'todos';
+
+  function getInventario(){
+    try { return JSON.parse(localStorage.getItem('techfix_inventario')) || []; }
+    catch(e){ return []; }
+  }
+  function guardarInventario(lista){
+    localStorage.setItem('techfix_inventario', JSON.stringify(lista));
+  }
+
+  function formatoMoneda(n){
+    n = Number(n) || 0;
+    return '$' + n.toLocaleString('es-AR');
+  }
+
+  function totalInvertido(equipo){
+    const gastos = (equipo.gastos || []).reduce((acc, g) => acc + (Number(g.monto) || 0), 0);
+    return (Number(equipo.precioCompra) || 0) + gastos;
+  }
+
+  function toggleInvForm(){
+    document.getElementById('invForm').classList.toggle('open');
+  }
+
+  function agregarEquipoInventario(){
+    const equipo = document.getElementById('invEquipo').value.trim();
+    const falla = document.getElementById('invFalla').value.trim();
+    const precioCompra = document.getElementById('invPrecioCompra').value;
+
+    if (!equipo || !precioCompra) {
+      alert('Complet\u00e1 al menos el equipo y el precio de compra.');
       return;
     }
-    trabajos.push({ antes: imgAntesData, despues: imgDespuesData, caption });
 
-    imgAntesData = null; imgDespuesData = null;
-    document.getElementById('fileAntes').value = '';
-    document.getElementById('fileDespues').value = '';
-    document.getElementById('inputCaption').value = '';
-    document.getElementById('prevAntes').innerHTML = `
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>
-      Foto "antes"`;
-    document.getElementById('prevDespues').innerHTML = `
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>
-      Foto "despu\u00e9s"`;
+    const lista = getInventario();
+    lista.unshift({
+      id: Date.now(),
+      equipo: equipo,
+      falla: falla,
+      precioCompra: Number(precioCompra),
+      fechaCompra: new Date().toLocaleDateString('es-AR'),
+      gastos: [],
+      estado: 'reparacion',
+      precioVenta: null,
+      fechaVenta: null
+    });
+    guardarInventario(lista);
 
-    renderTrabajos();
-    generarCodigo();
+    document.getElementById('invEquipo').value = '';
+    document.getElementById('invFalla').value = '';
+    document.getElementById('invPrecioCompra').value = '';
+    document.getElementById('invForm').classList.remove('open');
+    renderInventario();
   }
 
-  function quitarTrabajo(i){
-    trabajos.splice(i, 1);
-    renderTrabajos();
-    generarCodigo();
+  function agregarGasto(id){
+    const concepto = document.getElementById('gastoConcepto_' + id).value.trim();
+    const monto = document.getElementById('gastoMonto_' + id).value;
+    if (!concepto || !monto) { alert('Complet\u00e1 concepto y monto del gasto.'); return; }
+
+    const lista = getInventario();
+    const equipo = lista.find(e => e.id === id);
+    if (!equipo) return;
+    equipo.gastos = equipo.gastos || [];
+    equipo.gastos.push({ concepto, monto: Number(monto) });
+    guardarInventario(lista);
+    renderInventario();
   }
 
-  function renderTrabajos(){
-    const cont = document.getElementById('listaTrabajos');
-    if (trabajos.length === 0) { cont.innerHTML = ''; document.getElementById('codigoWrap').style.display = 'none'; return; }
-    cont.innerHTML = trabajos.map((t, i) => `
-      <div class="trabajo-item">
-        <img src="${t.antes}" alt="">
-        <img src="${t.despues}" alt="">
-        <span class="cap">${escapeHtml(t.caption)}</span>
-        <button onclick="quitarTrabajo(${i})">Quitar</button>
+  function quitarGasto(id, indice){
+    const lista = getInventario();
+    const equipo = lista.find(e => e.id === id);
+    if (!equipo) return;
+    equipo.gastos.splice(indice, 1);
+    guardarInventario(lista);
+    renderInventario();
+  }
+
+  function cambiarEstadoInv(id, nuevoEstado){
+    if (nuevoEstado === 'vendido') {
+      renderInventario(id); // vuelve a dibujar esa tarjeta mostrando el mini-formulario de venta
+      return;
+    }
+    const lista = getInventario();
+    const equipo = lista.find(e => e.id === id);
+    if (!equipo) return;
+    equipo.estado = nuevoEstado;
+    guardarInventario(lista);
+    renderInventario();
+  }
+
+  function confirmarVenta(id){
+    const precioVenta = document.getElementById('ventaPrecio_' + id).value;
+    if (!precioVenta) { alert('Ingres\u00e1 el precio de venta.'); return; }
+    const lista = getInventario();
+    const equipo = lista.find(e => e.id === id);
+    if (!equipo) return;
+    equipo.estado = 'vendido';
+    equipo.precioVenta = Number(precioVenta);
+    equipo.fechaVenta = new Date().toLocaleDateString('es-AR');
+    guardarInventario(lista);
+    renderInventario();
+  }
+
+  function eliminarEquipoInv(id){
+    if (!confirm('\u00bfSeguro que quer\u00e9s eliminar este equipo del inventario?')) return;
+    guardarInventario(getInventario().filter(e => e.id !== id));
+    renderInventario();
+  }
+
+  function setFiltroInv(valor){
+    filtroInvActivo = valor;
+    document.querySelectorAll('#filtroInv .filter-chip').forEach(chip => {
+      chip.classList.toggle('active', chip.dataset.filtro === valor);
+    });
+    renderInventario();
+  }
+
+  function renderInventario(mostrarVentaParaId){
+    const lista = getInventario();
+    const cont = document.getElementById('listaInventario');
+
+    const invertidoStock = lista.filter(e => e.estado !== 'vendido').reduce((acc, e) => acc + totalInvertido(e), 0);
+    const gananciaTotal = lista.filter(e => e.estado === 'vendido')
+      .reduce((acc, e) => acc + ((Number(e.precioVenta) || 0) - totalInvertido(e)), 0);
+    const enStock = lista.filter(e => e.estado !== 'vendido').length;
+
+    document.getElementById('invStatInvertido').textContent = formatoMoneda(invertidoStock);
+    document.getElementById('invStatGanancia').textContent = formatoMoneda(gananciaTotal);
+    document.getElementById('invStatStock').textContent = enStock;
+
+    const filtradas = filtroInvActivo === 'todos' ? lista : lista.filter(e => e.estado === filtroInvActivo);
+
+    if (filtradas.length === 0) {
+      cont.innerHTML = `
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          <p>${lista.length === 0 ? 'Todav\u00eda no carg\u00e1s ning\u00fan equipo.' : 'No hay equipos con ese filtro.'}</p>
+        </div>`;
+      return;
+    }
+
+    const nombresEstado = { reparacion: 'En reparaci\u00f3n', listo: 'Listo para vender', vendido: 'Vendido' };
+
+    cont.innerHTML = filtradas.map(e => {
+      const inv = totalInvertido(e);
+      const gastosHtml = (e.gastos || []).map((g, i) => `
+        <span class="gasto-chip">${escapeHtml(g.concepto)}: ${formatoMoneda(g.monto)}<button onclick="quitarGasto(${e.id}, ${i})">&times;</button></span>
+      `).join('');
+
+      let ventaHtml = '';
+      if (e.estado === 'vendido') {
+        const ganancia = (Number(e.precioVenta) || 0) - inv;
+        ventaHtml = `<p class="venta-resultado ${ganancia >= 0 ? 'pos' : 'neg'}">Vendido el ${e.fechaVenta} por ${formatoMoneda(e.precioVenta)} &mdash; Ganancia: <b>${formatoMoneda(ganancia)}</b></p>`;
+      } else if (mostrarVentaParaId === e.id) {
+        ventaHtml = `
+          <div class="venta-box">
+            <input type="number" id="ventaPrecio_${e.id}" placeholder="Precio de venta">
+            <button onclick="confirmarVenta(${e.id})">Confirmar venta</button>
+          </div>`;
+      }
+
+      return `
+      <div class="inv-card">
+        <div class="inv-top">
+          <div>
+            <div class="inv-titulo">${escapeHtml(e.equipo)}</div>
+            <div class="inv-fecha">Comprado el ${e.fechaCompra}</div>
+          </div>
+          <span class="inv-badge ${e.estado}">${nombresEstado[e.estado]}</span>
+        </div>
+        ${e.falla ? `<div class="inv-falla">${escapeHtml(e.falla)}</div>` : ''}
+
+        <div class="inv-money-row"><span>Precio de compra</span><b>${formatoMoneda(e.precioCompra)}</b></div>
+        ${gastosHtml ? `<div style="margin-top:6px;">${gastosHtml}</div>` : ''}
+        <div class="inv-total-row"><span>Total invertido</span><span class="val">${formatoMoneda(inv)}</span></div>
+
+        ${e.estado !== 'vendido' ? `
+        <div class="inv-gasto-form">
+          <input type="text" class="concepto" id="gastoConcepto_${e.id}" placeholder='Concepto (ej: "M\u00f3dulo")'>
+          <input type="number" class="monto" id="gastoMonto_${e.id}" placeholder="Monto">
+          <button onclick="agregarGasto(${e.id})">+ Gasto</button>
+        </div>` : ''}
+
+        ${ventaHtml}
+
+        <div class="inv-actions">
+          <select class="inv-estado-select" onchange="cambiarEstadoInv(${e.id}, this.value)">
+            <option value="reparacion" ${e.estado === 'reparacion' ? 'selected' : ''}>En reparaci\u00f3n</option>
+            <option value="listo" ${e.estado === 'listo' ? 'selected' : ''}>Listo para vender</option>
+            <option value="vendido" ${e.estado === 'vendido' ? 'selected' : ''}>Vendido</option>
+          </select>
+          <button class="inv-delete" onclick="eliminarEquipoInv(${e.id})">Eliminar</button>
+        </div>
+      </div>
+    `; }).join('');
+  }
+
+  // ==================================================================
+  // CLIENTES
+  // ==================================================================
+  function getClientes(){
+    try { return JSON.parse(localStorage.getItem('techfix_clientes')) || []; }
+    catch(e){ return []; }
+  }
+  function guardarClientes(lista){ localStorage.setItem('techfix_clientes', JSON.stringify(lista)); }
+
+  function toggleCliForm(){ document.getElementById('cliForm').classList.toggle('open'); }
+
+  function agregarCliente(){
+    const nombre = document.getElementById('cliNombre').value.trim();
+    if (!nombre) { alert('Ingres\u00e1 al menos el nombre del cliente.'); return; }
+
+    const lista = getClientes();
+    lista.unshift({
+      id: Date.now(),
+      nombre: nombre,
+      empresa: document.getElementById('cliEmpresa').value.trim(),
+      telefono: document.getElementById('cliTelefono').value.trim(),
+      email: document.getElementById('cliEmail').value.trim(),
+      direccion: document.getElementById('cliDireccion').value.trim(),
+      notas: document.getElementById('cliNotas').value.trim(),
+      creado: new Date().toLocaleDateString('es-AR')
+    });
+    guardarClientes(lista);
+
+    ['cliNombre','cliEmpresa','cliTelefono','cliEmail','cliDireccion','cliNotas'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('cliForm').classList.remove('open');
+    renderClientes();
+  }
+
+  function eliminarCliente(id){
+    if (!confirm('\u00bfSeguro que quer\u00e9s eliminar este cliente?')) return;
+    guardarClientes(getClientes().filter(c => c.id !== id));
+    renderClientes();
+  }
+
+  function renderClientes(){
+    const clientes = getClientes();
+    const ordenes = getOrdenes();
+    const filtro = normalizarTexto(document.getElementById('inputBuscarCliente').value);
+    const cont = document.getElementById('listaClientes');
+
+    document.getElementById('cliStatTotal').textContent = clientes.length;
+    document.getElementById('cliStatOrdenes').textContent = ordenes.filter(o => o.clienteId).length;
+
+    // Refrescamos el datalist que usa el formulario de \u00d3rdenes.
+    const datalist = document.getElementById('listaClientesDatalist');
+    if (datalist) datalist.innerHTML = clientes.map(c => `<option value="${escapeHtml(c.nombre)}">`).join('');
+
+    const filtrados = filtro
+      ? clientes.filter(c => normalizarTexto(`${c.nombre} ${c.empresa} ${c.email}`).includes(filtro))
+      : clientes;
+
+    if (filtrados.length === 0) {
+      cont.innerHTML = `
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="7" r="3"/><path d="M2 21v-1a7 7 0 0114 0v1"/></svg>
+          <p>${clientes.length === 0 ? 'Todav\u00eda no carg\u00e1s ning\u00fan cliente.' : 'No hay clientes con esa b\u00fasqueda.'}</p>
+        </div>`;
+      return;
+    }
+
+    cont.innerHTML = filtrados.map(c => {
+      const cantOrdenes = ordenes.filter(o => o.clienteId === c.id).length;
+      return `
+      <div class="cli-card">
+        <div class="cli-top">
+          <div>
+            <div class="cli-nombre">${escapeHtml(c.nombre)}</div>
+            ${c.empresa ? `<div class="cli-empresa">${escapeHtml(c.empresa)}</div>` : ''}
+          </div>
+          <span class="cli-count">${cantOrdenes} \u00f3rden${cantOrdenes === 1 ? '' : 'es'}</span>
+        </div>
+        <div class="cli-info">
+          ${c.telefono ? `${escapeHtml(c.telefono)}<br>` : ''}
+          ${c.email ? `${escapeHtml(c.email)}<br>` : ''}
+          ${c.direccion ? escapeHtml(c.direccion) : ''}
+        </div>
+        ${c.notas ? `<div class="cli-notas">${escapeHtml(c.notas)}</div>` : ''}
+        <div class="cli-actions">
+          ${c.telefono ? `<button onclick="window.open('https://wa.me/${soloDigitos(c.telefono)}','_blank')">WhatsApp</button>` : ''}
+          <button class="danger" onclick="eliminarCliente(${c.id})">Eliminar</button>
+        </div>
+      </div>
+    `; }).join('');
+  }
+
+  // ==================================================================
+  // \u00d3RDENES DE SERVICIO
+  // ==================================================================
+  const NOMBRES_ESTADO_ORDEN = {
+    pendiente: 'Pendiente', en_progreso: 'En progreso', esperando_repuesto: 'Esperando repuesto',
+    finalizada: 'Finalizada', entregada: 'Entregada'
+  };
+  let filtroOrdActivo = 'todas';
+
+  function getOrdenes(){
+    try { return JSON.parse(localStorage.getItem('techfix_ordenes')) || []; }
+    catch(e){ return []; }
+  }
+  function guardarOrdenes(lista){ localStorage.setItem('techfix_ordenes', JSON.stringify(lista)); }
+
+  function nextFolio(){
+    const ordenes = getOrdenes();
+    const nums = ordenes.map(o => parseInt((o.folio || '').split('-')[1] || '0', 10)).filter(n => !isNaN(n));
+    const next = (nums.length ? Math.max(...nums) : 0) + 1;
+    return 'OS-' + String(next).padStart(4, '0');
+  }
+
+  function toggleOrdForm(){ document.getElementById('ordForm').classList.toggle('open'); }
+
+  function agregarOrden(){
+    const clienteNombre = document.getElementById('ordCliente').value.trim();
+    const equipo = document.getElementById('ordEquipo').value.trim();
+    const falla = document.getElementById('ordFalla').value.trim();
+    if (!clienteNombre || !equipo || !falla) {
+      alert('Complet\u00e1 al menos cliente, equipo y falla.');
+      return;
+    }
+
+    // Si el nombre coincide con un cliente ya cargado, lo vinculamos.
+    const clientes = getClientes();
+    const match = clientes.find(c => normalizarTexto(c.nombre) === normalizarTexto(clienteNombre));
+
+    const lista = getOrdenes();
+    lista.unshift({
+      id: Date.now(),
+      folio: nextFolio(),
+      clienteId: match ? match.id : null,
+      clienteNombre: clienteNombre,
+      clienteTelefono: document.getElementById('ordTelefono').value.trim() || (match ? match.telefono : ''),
+      equipo: equipo,
+      imei: document.getElementById('ordImei').value.trim(),
+      falla: falla,
+      tecnico: document.getElementById('ordTecnico').value.trim(),
+      estado: 'pendiente',
+      presupuesto: Number(document.getElementById('ordPresupuesto').value) || 0,
+      ingreso: new Date().toLocaleDateString('es-AR'),
+      entregaEstimada: document.getElementById('ordEntrega').value,
+      garantiaDias: Number(document.getElementById('ordGarantia').value) || 0,
+      notas: document.getElementById('ordNotas').value.trim(),
+      firmaCliente: ''
+    });
+    guardarOrdenes(lista);
+
+    ['ordCliente','ordTelefono','ordEquipo','ordImei','ordFalla','ordTecnico','ordPresupuesto','ordEntrega','ordNotas'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('ordGarantia').value = '30';
+    document.getElementById('ordForm').classList.remove('open');
+    renderOrdenes();
+  }
+
+  function cambiarEstadoOrden(id, estado){
+    const lista = getOrdenes();
+    const orden = lista.find(o => o.id === id);
+    if (!orden) return;
+    orden.estado = estado;
+    guardarOrdenes(lista);
+    renderOrdenes();
+  }
+
+  function eliminarOrden(id){
+    if (!confirm('\u00bfSeguro que quer\u00e9s eliminar esta orden?')) return;
+    guardarOrdenes(getOrdenes().filter(o => o.id !== id));
+    renderOrdenes();
+  }
+
+  function setFiltroOrd(valor){
+    filtroOrdActivo = valor;
+    document.querySelectorAll('#filtroOrd .filter-chip').forEach(chip => {
+      chip.classList.toggle('active', chip.dataset.filtro === valor);
+    });
+    renderOrdenes();
+  }
+
+  function toggleFirma(id){
+    document.getElementById('firmaBox_' + id).classList.toggle('open');
+    const canvas = document.getElementById('firmaCanvas_' + id);
+    if (canvas && !canvas.dataset.listo) inicializarCanvasFirma(canvas, id);
+  }
+
+  function inicializarCanvasFirma(canvas, id){
+    canvas.dataset.listo = '1';
+    const ratio = window.devicePixelRatio || 1;
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(ratio, ratio);
+    let dibujando = false;
+
+    function pos(e){
+      const r = canvas.getBoundingClientRect();
+      const p = e.touches ? e.touches[0] : e;
+      return { x: p.clientX - r.left, y: p.clientY - r.top };
+    }
+    function empezar(e){ e.preventDefault(); dibujando = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }
+    function mover(e){
+      if (!dibujando) return;
+      e.preventDefault();
+      const p = pos(e);
+      ctx.strokeStyle = '#0A0A0A'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+      ctx.lineTo(p.x, p.y); ctx.stroke();
+    }
+    function terminar(){ dibujando = false; }
+
+    canvas.addEventListener('mousedown', empezar);
+    canvas.addEventListener('mousemove', mover);
+    canvas.addEventListener('mouseup', terminar);
+    canvas.addEventListener('mouseleave', terminar);
+    canvas.addEventListener('touchstart', empezar);
+    canvas.addEventListener('touchmove', mover);
+    canvas.addEventListener('touchend', terminar);
+  }
+
+  function limpiarFirma(id){
+    const canvas = document.getElementById('firmaCanvas_' + id);
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function guardarFirmaOrden(id){
+    const canvas = document.getElementById('firmaCanvas_' + id);
+    const dataUrl = canvas.toDataURL();
+    const lista = getOrdenes();
+    const orden = lista.find(o => o.id === id);
+    if (!orden) return;
+    orden.firmaCliente = dataUrl;
+    guardarOrdenes(lista);
+    renderOrdenes();
+  }
+
+  function renderOrdenes(){
+    const ordenes = getOrdenes();
+    const cont = document.getElementById('listaOrdenes');
+
+    document.getElementById('ordStatTotal').textContent = ordenes.length;
+    document.getElementById('ordStatAbiertas').textContent = ordenes.filter(o => o.estado !== 'entregada' && o.estado !== 'finalizada').length;
+    const facturado = ordenes.filter(o => o.estado === 'finalizada' || o.estado === 'entregada').reduce((acc, o) => acc + (Number(o.presupuesto) || 0), 0);
+    document.getElementById('ordStatFacturado').textContent = formatoMoneda(facturado);
+
+    const filtradas = filtroOrdActivo === 'todas' ? ordenes : ordenes.filter(o => o.estado === filtroOrdActivo);
+
+    if (filtradas.length === 0) {
+      cont.innerHTML = `
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>
+          <p>${ordenes.length === 0 ? 'Todav\u00eda no carg\u00e1s ninguna orden.' : 'No hay \u00f3rdenes con ese filtro.'}</p>
+        </div>`;
+      return;
+    }
+
+    cont.innerHTML = filtradas.map(o => `
+      <div class="ord-card">
+        <div class="ord-top">
+          <div>
+            <div class="ord-folio">${o.folio}</div>
+            <div class="ord-cliente">${escapeHtml(o.clienteNombre)}</div>
+            <div class="ord-equipo">${escapeHtml(o.equipo)}${o.imei ? ' &middot; IMEI ' + escapeHtml(o.imei) : ''}</div>
+          </div>
+          <span class="ord-badge ${o.estado}">${NOMBRES_ESTADO_ORDEN[o.estado]}</span>
+        </div>
+        <div class="ord-falla">${escapeHtml(o.falla)}</div>
+        <div class="ord-meta">
+          <span>Ingreso: ${o.ingreso}</span>
+          ${o.entregaEstimada ? `<span>Entrega: ${o.entregaEstimada}</span>` : ''}
+          ${o.tecnico ? `<span>T\u00e9cnico: ${escapeHtml(o.tecnico)}</span>` : ''}
+          ${o.garantiaDias ? `<span>Garant\u00eda: ${o.garantiaDias} d\u00edas</span>` : ''}
+        </div>
+        <div class="ord-precio">${formatoMoneda(o.presupuesto)}</div>
+
+        <div class="ord-actions">
+          <select onchange="cambiarEstadoOrden(${o.id}, this.value)">
+            ${Object.keys(NOMBRES_ESTADO_ORDEN).map(k => `<option value="${k}" ${o.estado === k ? 'selected' : ''}>${NOMBRES_ESTADO_ORDEN[k]}</option>`).join('')}
+          </select>
+          <button onclick="toggleFirma(${o.id})">${o.firmaCliente ? '\u2713 Firmada' : 'Firmar'}</button>
+          <button onclick="imprimirOrden(${o.id}, 'reparacion')">Planilla</button>
+          <button onclick="imprimirOrden(${o.id}, 'garantia')">Garant\u00eda</button>
+          <button onclick="imprimirOrden(${o.id}, 'factura')">Factura</button>
+          <button class="danger" onclick="eliminarOrden(${o.id})">Eliminar</button>
+        </div>
+
+        <div class="firma-box" id="firmaBox_${o.id}">
+          <canvas id="firmaCanvas_${o.id}"></canvas>
+          <div class="firma-actions">
+            <button class="fa-limpiar" onclick="limpiarFirma(${o.id})">Limpiar</button>
+            <button class="fa-guardar" onclick="guardarFirmaOrden(${o.id})">Guardar firma</button>
+          </div>
+          ${o.firmaCliente ? '<p class="firma-ok">Firma guardada.</p>' : ''}
+        </div>
       </div>
     `).join('');
   }
 
-  function generarCodigo(){
-    const wrap = document.getElementById('codigoWrap');
-    if (trabajos.length === 0) { wrap.style.display = 'none'; return; }
-    const bloques = trabajos.map(t => `        <div class="gallery-card">
-          <div class="ba-imgs">
-            <div class="ba-slot"><span class="tag">Antes</span><img src="${t.antes}" alt="Antes"></div>
-            <div class="ba-slot"><span class="tag">Despu\u00e9s</span><img src="${t.despues}" alt="Despu\u00e9s"></div>
-          </div>
-          <p class="gallery-caption">${escapeHtml(t.caption)}</p>
-        </div>`).join('\n');
-
-    document.getElementById('codigoOutput').value =
-`<!-- Peg\u00e1 esto dentro de <div class="gallery-grid" id="galeriaBA"> en galeria.html, -->
-<!-- reemplazando las 3 tarjetas de ejemplo que ya est\u00e1n ah\u00ed. -->
-${bloques}`;
-    wrap.style.display = 'block';
+  // ---- Documentos imprimibles ----
+  function imprimirOrden(id, tipo){
+    const orden = getOrdenes().find(o => o.id === id);
+    if (!orden) return;
+    const html = tipo === 'garantia' ? construirHtmlGarantia(orden)
+      : tipo === 'factura' ? construirHtmlFactura(orden)
+      : construirHtmlReparacion(orden);
+    const ventana = window.open('', '_blank');
+    if (!ventana) { alert('Tu navegador bloque\u00f3 la ventana emergente. Habilit\u00e1 pop-ups para este sitio e intent\u00e1 de nuevo.'); return; }
+    ventana.document.write(html);
+    ventana.document.close();
   }
 
-  function copiarCodigo(){
-    const texto = document.getElementById('codigoOutput');
-    texto.select();
-    navigator.clipboard.writeText(texto.value).then(() => {
-      const ok = document.getElementById('copyOk');
-      ok.classList.add('show');
-      setTimeout(() => ok.classList.remove('show'), 1800);
-    }).catch(() => { document.execCommand('copy'); });
+  function encabezadoImprimible(subtitulo, nombreArchivo){
+    return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>${escapeHtml(subtitulo)}</title>
+    <style>
+      body{ font-family: Arial, Helvetica, sans-serif; color:#0f172a; max-width:680px; margin:40px auto; padding:0 20px; }
+      .header{ display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid #0f172a; padding-bottom:14px; margin-bottom:20px; }
+      h1{ font-size:22px; margin:0; } .sub{ color:#64748b; font-size:13px; margin:2px 0 0; }
+      .right{ text-align:right; } .right p{ margin:0; } .right .b{ font-weight:700; }
+      h2{ font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:#64748b; margin:22px 0 8px; }
+      .row{ display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed #e2e8f0; font-size:14px; }
+      .row span:first-child{ color:#64748b; }
+      .box{ background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; font-size:14px; }
+      .list{ font-size:14px; padding-left:18px; } .list li{ margin-bottom:6px; }
+      .dark{ background:#0A0A0A; color:#fff; border-radius:12px; padding:24px; text-align:center; margin:24px 0; }
+      .dark p:first-child{ font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:#94A3B8; margin:0 0 4px; }
+      .dark .n{ font-size:30px; font-weight:700; margin:0; color:#00A8FF; }
+      table.items{ width:100%; border-collapse:collapse; font-size:14px; margin-top:6px; }
+      table.items th{ text-align:left; font-size:11px; text-transform:uppercase; color:#64748b; border-bottom:2px solid #0f172a; padding:6px 4px; }
+      table.items td{ padding:8px 4px; border-bottom:1px solid #e2e8f0; }
+      table.items td:last-child, table.items th:last-child{ text-align:right; }
+      .total-row td{ border-bottom:0; padding-top:12px; font-weight:700; font-size:16px; }
+      .sign{ display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:50px; padding-top:10px; }
+      .sign div{ text-align:center; } .sign img{ height:60px; margin:0 auto; display:block; }
+      .sign .line{ border-top:1px solid #94a3b8; padding-top:4px; font-size:11px; color:#64748b; margin-top:8px; }
+      .noprint{ margin-bottom:20px; display:flex; gap:8px; } .noprint button{ background:#0A0A0A; color:#fff; border:0; padding:8px 16px; border-radius:8px; font-size:13px; cursor:pointer; }
+      .noprint button.alt{ background:#fff; color:#0A0A0A; border:1px solid #cbd5e1; }
+      @media print{ .noprint{ display:none; } }
+    </style></head><body>
+    <div class="noprint">
+      <button onclick="window.print()">Imprimir</button>
+      <button class="alt" onclick="(function(){var b=new Blob(['<!DOCTYPE html>'+document.documentElement.outerHTML],{type:'text/html'});var u=URL.createObjectURL(b);var a=document.createElement('a');a.href=u;a.download='${escapeHtml(nombreArchivo)}.html';a.click();URL.revokeObjectURL(u);})()">Descargar</button>
+    </div>
+    <div class="header"><div><h1>Tech Fix</h1><p class="sub">Villa Mar\u00eda, C\u00f3rdoba &middot; Servicio T\u00e9cnico de Celulares</p></div>
+    <div class="right"><p class="b">${escapeHtml(subtitulo)}</p><p class="sub">${new Date().toLocaleDateString('es-AR')}</p></div></div>`;
+  }
+
+  function construirHtmlReparacion(o){
+    return encabezadoImprimible('Planilla de Reparaci\u00f3n \u00b7 ' + o.folio, 'planilla-' + o.folio) + `
+      <h2>Datos del cliente</h2>
+      <div class="row"><span>Nombre</span><span>${escapeHtml(o.clienteNombre) || '\u2014'}</span></div>
+      <div class="row"><span>Tel\u00e9fono</span><span>${escapeHtml(o.clienteTelefono) || '\u2014'}</span></div>
+      <h2>Datos del equipo</h2>
+      <div class="row"><span>Equipo</span><span>${escapeHtml(o.equipo)}</span></div>
+      <div class="row"><span>IMEI</span><span>${escapeHtml(o.imei) || '\u2014'}</span></div>
+      <div class="row"><span>Fecha de ingreso</span><span>${o.ingreso || '\u2014'}</span></div>
+      <div class="row"><span>Entrega estimada</span><span>${o.entregaEstimada || '\u2014'}</span></div>
+      <div class="row"><span>T\u00e9cnico asignado</span><span>${escapeHtml(o.tecnico) || '\u2014'}</span></div>
+      <h2>Falla reportada</h2><div class="box">${escapeHtml(o.falla)}</div>
+      <h2>Presupuesto</h2>
+      <div class="row"><span>Monto presupuestado</span><span>${o.presupuesto ? formatoMoneda(o.presupuesto) : '\u2014'}</span></div>
+      <div class="row"><span>Garant\u00eda sobre la reparaci\u00f3n</span><span>${o.garantiaDias ? o.garantiaDias + ' d\u00edas' : 'Sin garant\u00eda'}</span></div>
+      ${o.notas ? `<h2>Notas</h2><p style="font-size:14px;">${escapeHtml(o.notas)}</p>` : ''}
+      <div class="sign">
+        <div>${o.firmaCliente ? `<img src="${o.firmaCliente}">` : '<div style="height:60px"></div>'}<div class="line">Firma del cliente</div></div>
+        <div><div style="height:60px"></div><div class="line">Firma del t\u00e9cnico</div></div>
+      </div>
+    </body></html>`;
+  }
+
+  function construirHtmlGarantia(o){
+    const dias = o.garantiaDias || 30;
+    const fechaBase = o.entregaEstimada || new Date().toISOString().slice(0, 10);
+    let venc;
+    try { venc = new Date(fechaBase + 'T00:00:00'); venc.setDate(venc.getDate() + dias); } catch(e) { venc = null; }
+
+    return encabezadoImprimible('Certificado de Garant\u00eda \u00b7 ' + o.folio, 'garantia-' + o.folio) + `
+      <div class="row"><span>Cliente</span><span>${escapeHtml(o.clienteNombre) || '\u2014'}</span></div>
+      <div class="row"><span>Equipo</span><span>${escapeHtml(o.equipo)}</span></div>
+      <div class="row"><span>IMEI</span><span>${escapeHtml(o.imei) || '\u2014'}</span></div>
+      <div class="row"><span>Reparaci\u00f3n realizada</span><span>${escapeHtml(o.falla)}</span></div>
+      <div class="row"><span>Fecha de entrega</span><span>${o.entregaEstimada || o.ingreso || '\u2014'}</span></div>
+      <div class="dark"><p>Garant\u00eda v\u00e1lida por</p><p class="n">${dias} d\u00edas</p>${venc ? `<p style="font-size:11px;color:#cbd5e1;margin-top:4px;">Vence el ${venc.toLocaleDateString('es-AR')}</p>` : ''}</div>
+      <h2>Condiciones</h2>
+      <ul class="list">
+        <li>La garant\u00eda cubre exclusivamente la falla reparada en esta orden.</li>
+        <li>No cubre golpes, contacto con agua, ni ning\u00fan otro da\u00f1o ocasionado despu\u00e9s de la reparaci\u00f3n.</li>
+        <li>Para hacerla valer, presentar este certificado junto con la orden de servicio.</li>
+      </ul>
+      <div class="sign">
+        <div><div style="height:60px"></div><div class="line">Firma del cliente</div></div>
+        <div><div style="height:60px"></div><div class="line">Sello / firma del servicio t\u00e9cnico</div></div>
+      </div>
+    </body></html>`;
+  }
+
+  function construirHtmlFactura(o){
+    const numero = 'FC-' + (o.folio.split('-')[1] || '0000');
+    const total = Number(o.presupuesto) || 0;
+    return encabezadoImprimible('Factura \u00b7 ' + numero, 'factura-' + o.folio) + `
+      <h2>Cliente</h2>
+      <div class="row"><span>Nombre</span><span>${escapeHtml(o.clienteNombre) || '\u2014'}</span></div>
+      <div class="row"><span>Tel\u00e9fono</span><span>${escapeHtml(o.clienteTelefono) || '\u2014'}</span></div>
+      <h2>Detalle</h2>
+      <table class="items">
+        <thead><tr><th>Concepto</th><th>Total</th></tr></thead>
+        <tbody>
+          <tr><td>Servicio t\u00e9cnico &mdash; ${escapeHtml(o.equipo)}${o.imei ? ' (IMEI ' + escapeHtml(o.imei) + ')' : ''}<br><span style="color:#64748b;font-size:12px;">${escapeHtml(o.falla)}</span></td><td>${formatoMoneda(total)}</td></tr>
+          <tr class="total-row"><td>Total a pagar</td><td>${formatoMoneda(total)}</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:#64748b;margin-top:24px;">Orden de servicio asociada: ${o.folio}${o.garantiaDias ? ' &middot; Garant\u00eda: ' + o.garantiaDias + ' d\u00edas' : ''}</p>
+      <div class="sign">
+        <div><div style="height:60px"></div><div class="line">Firma del cliente</div></div>
+        <div><div style="height:60px"></div><div class="line">Sello / firma del servicio t\u00e9cnico</div></div>
+      </div>
+    </body></html>`;
+  }
+
+  // ==================================================================
+  // REPORTES
+  // ==================================================================
+  function renderReportes(){
+    const ordenes = getOrdenes();
+    const clientes = getClientes();
+    const equipos = getInventario();
+    const cont = document.getElementById('reportesContenido');
+
+    // Por t\u00e9cnico
+    const porTecnico = {};
+    ordenes.forEach(o => {
+      const t = o.tecnico ? o.tecnico.trim() : 'Sin asignar';
+      if (!porTecnico[t]) porTecnico[t] = { total: 0, finalizadas: 0 };
+      porTecnico[t].total++;
+      if (o.estado === 'finalizada' || o.estado === 'entregada') porTecnico[t].finalizadas++;
+    });
+    const listaTecnicos = Object.entries(porTecnico).sort((a, b) => b[1].total - a[1].total);
+    const maxTecnico = Math.max(1, ...listaTecnicos.map(([, v]) => v.total));
+
+    // Por cliente (top facturaci\u00f3n)
+    const porCliente = {};
+    ordenes.forEach(o => {
+      const nombre = o.clienteNombre || 'Sin nombre';
+      porCliente[nombre] = (porCliente[nombre] || 0) + (Number(o.presupuesto) || 0);
+    });
+    const listaClientesTop = Object.entries(porCliente).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).slice(0, 6);
+    const maxCliente = Math.max(1, ...listaClientesTop.map(([, v]) => v));
+
+    // \u00d3rdenes por estado
+    const porEstado = {};
+    ordenes.forEach(o => { porEstado[o.estado] = (porEstado[o.estado] || 0) + 1; });
+
+    // Reventa
+    const vendidos = equipos.filter(e => e.estado === 'vendido');
+    const gananciaTotal = vendidos.reduce((acc, e) => acc + ((Number(e.precioVenta) || 0) - totalInvertido(e)), 0);
+    const totalVendido = vendidos.reduce((acc, e) => acc + (Number(e.precioVenta) || 0), 0);
+    const margenPromedio = vendidos.length ? Math.round(gananciaTotal / vendidos.length) : 0;
+
+    const presupuestoPromedio = ordenes.length
+      ? Math.round(ordenes.reduce((acc, o) => acc + (Number(o.presupuesto) || 0), 0) / ordenes.length)
+      : 0;
+
+    const barra = (nombre, valor, max, sufijo) => `
+      <div class="rep-row">
+        <div class="rep-row-top"><span>${escapeHtml(nombre)}</span><span>${sufijo}</span></div>
+        <div class="rep-bar"><div class="rep-bar-fill" style="width:${Math.max(4, (valor / max) * 100)}%"></div></div>
+      </div>`;
+
+    cont.innerHTML = `
+      <div class="rep-block">
+        <h3>Rendimiento por t\u00e9cnico</h3>
+        ${listaTecnicos.length ? listaTecnicos.map(([nombre, v]) => barra(nombre, v.total, maxTecnico, `${v.total} \u00f3rdenes \u00b7 ${v.finalizadas} finalizadas`)).join('') : '<p class="rep-empty">Todav\u00eda no hay \u00f3rdenes cargadas.</p>'}
+      </div>
+
+      <div class="rep-block">
+        <h3>Clientes que m\u00e1s facturan</h3>
+        ${listaClientesTop.length ? listaClientesTop.map(([nombre, v]) => barra(nombre, v, maxCliente, formatoMoneda(v))).join('') : '<p class="rep-empty">Todav\u00eda no hay datos.</p>'}
+      </div>
+
+      <div class="rep-block">
+        <h3>Compra y reventa</h3>
+        <div class="stats" style="margin-bottom:0;">
+          <div class="stat"><p class="n display">${vendidos.length}</p><p class="l">Vendidos</p></div>
+          <div class="stat"><p class="n display">${formatoMoneda(totalVendido)}</p><p class="l">Facturado</p></div>
+          <div class="stat"><p class="n display">${formatoMoneda(margenPromedio)}</p><p class="l">Ganancia prom.</p></div>
+        </div>
+      </div>
+
+      <div class="rep-block">
+        <h3>\u00d3rdenes por estado</h3>
+        ${Object.keys(porEstado).length ? Object.entries(porEstado).map(([k, v]) => `
+          <div class="rep-row-top" style="margin-bottom:8px;"><span>${NOMBRES_ESTADO_ORDEN[k] || k}</span><span>${v}</span></div>
+        `).join('') : '<p class="rep-empty">Todav\u00eda no hay \u00f3rdenes cargadas.</p>'}
+      </div>
+
+      <div class="rep-block">
+        <h3>Presupuesto promedio por orden</h3>
+        <p style="font-family:'Bebas Neue',sans-serif; font-size:2.2rem; color:var(--tf-blue-light); margin:0;">${formatoMoneda(presupuestoPromedio)}</p>
+      </div>
+    `;
   }
 </script>
 </body>
