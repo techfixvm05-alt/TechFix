@@ -499,6 +499,7 @@
         <button class="filter-chip" data-filtro="reparacion" onclick="setFiltroInv('reparacion')">En reparaci&oacute;n</button>
         <button class="filter-chip" data-filtro="listo" onclick="setFiltroInv('listo')">Listo para vender</button>
         <button class="filter-chip" data-filtro="vendido" onclick="setFiltroInv('vendido')">Vendido</button>
+        <button class="filter-chip" data-filtro="archivados" onclick="setFiltroInv('archivados')">Archivados</button>
       </div>
 
       <div id="listaInventario"></div>
@@ -576,6 +577,7 @@
         <button class="filter-chip" data-filtro="esperando_repuesto" onclick="setFiltroOrd('esperando_repuesto')">Esperando repuesto</button>
         <button class="filter-chip" data-filtro="finalizada" onclick="setFiltroOrd('finalizada')">Finalizada</button>
         <button class="filter-chip" data-filtro="entregada" onclick="setFiltroOrd('entregada')">Entregada</button>
+        <button class="filter-chip" data-filtro="archivadas" onclick="setFiltroOrd('archivadas')">Archivadas</button>
       </div>
 
       <div id="listaOrdenes"></div>
@@ -949,7 +951,8 @@
       gastos: [],
       estado: 'reparacion',
       precioVenta: null,
-      fechaVenta: null
+      fechaVenta: null,
+      archivado: false
     });
     guardarInventario(lista);
 
@@ -983,15 +986,33 @@
     renderInventario();
   }
 
+  const ORDEN_ESTADO_INV = ['reparacion', 'listo', 'vendido'];
+
   function cambiarEstadoInv(id, nuevoEstado){
+    const lista = getInventario();
+    const equipo = lista.find(e => e.id === id);
+    if (!equipo) return;
+
+    // No se permite retroceder de estado.
+    if (ORDEN_ESTADO_INV.indexOf(nuevoEstado) < ORDEN_ESTADO_INV.indexOf(equipo.estado)) {
+      renderInventario();
+      return;
+    }
+
     if (nuevoEstado === 'vendido') {
       renderInventario(id); // vuelve a dibujar esa tarjeta mostrando el mini-formulario de venta
       return;
     }
+    equipo.estado = nuevoEstado;
+    guardarInventario(lista);
+    renderInventario();
+  }
+
+  function archivarEquipoInv(id){
     const lista = getInventario();
     const equipo = lista.find(e => e.id === id);
     if (!equipo) return;
-    equipo.estado = nuevoEstado;
+    equipo.archivado = true;
     guardarInventario(lista);
     renderInventario();
   }
@@ -1036,7 +1057,11 @@
     document.getElementById('invStatGanancia').textContent = formatoMoneda(gananciaTotal);
     document.getElementById('invStatStock').textContent = enStock;
 
-    const filtradas = filtroInvActivo === 'todos' ? lista : lista.filter(e => e.estado === filtroInvActivo);
+    const filtradas = filtroInvActivo === 'archivados'
+      ? lista.filter(e => e.archivado)
+      : filtroInvActivo === 'todos'
+        ? lista.filter(e => !e.archivado)
+        : lista.filter(e => e.estado === filtroInvActivo && !e.archivado);
 
     if (filtradas.length === 0) {
       cont.innerHTML = `
@@ -1067,6 +1092,27 @@
           </div>`;
       }
 
+      // Una vez "listo" solo puede avanzar a "vendido"; una vez "vendido" queda fijo.
+      const opcionesDisponibles = ORDEN_ESTADO_INV.slice(ORDEN_ESTADO_INV.indexOf(e.estado));
+      const etiquetasOpcion = { reparacion: 'En reparaci\u00f3n', listo: 'Listo para vender', vendido: 'Vendido' };
+
+      const accionesHtml = e.estado === 'vendido'
+        ? `
+          <div class="inv-actions">
+            <span class="inv-badge vendido" style="font-size:11px;">No se puede modificar</span>
+            ${e.archivado
+              ? '<span class="inv-badge listo" style="font-size:11px;">Archivado</span>'
+              : `<button class="inv-delete" onclick="archivarEquipoInv(${e.id})" style="border-color:rgba(0,168,255,0.4); color:var(--tf-blue-light);">Archivar</button>`}
+            <button class="inv-delete" onclick="eliminarEquipoInv(${e.id})">Eliminar</button>
+          </div>`
+        : `
+          <div class="inv-actions">
+            <select class="inv-estado-select" onchange="cambiarEstadoInv(${e.id}, this.value)">
+              ${opcionesDisponibles.map(op => `<option value="${op}" ${op === e.estado ? 'selected' : ''}>${etiquetasOpcion[op]}</option>`).join('')}
+            </select>
+            <button class="inv-delete" onclick="eliminarEquipoInv(${e.id})">Eliminar</button>
+          </div>`;
+
       return `
       <div class="inv-card">
         <div class="inv-top">
@@ -1091,14 +1137,7 @@
 
         ${ventaHtml}
 
-        <div class="inv-actions">
-          <select class="inv-estado-select" onchange="cambiarEstadoInv(${e.id}, this.value)">
-            <option value="reparacion" ${e.estado === 'reparacion' ? 'selected' : ''}>En reparaci\u00f3n</option>
-            <option value="listo" ${e.estado === 'listo' ? 'selected' : ''}>Listo para vender</option>
-            <option value="vendido" ${e.estado === 'vendido' ? 'selected' : ''}>Vendido</option>
-          </select>
-          <button class="inv-delete" onclick="eliminarEquipoInv(${e.id})">Eliminar</button>
-        </div>
+        ${accionesHtml}
       </div>
     `; }).join('');
   }
@@ -1247,7 +1286,9 @@
       entregaEstimada: document.getElementById('ordEntrega').value,
       garantiaDias: Number(document.getElementById('ordGarantia').value) || 0,
       notas: document.getElementById('ordNotas').value.trim(),
-      firmaCliente: ''
+      firmaCliente: '',
+      fechaEntrega: null,
+      archivado: false
     });
     guardarOrdenes(lista);
 
@@ -1261,7 +1302,15 @@
     const lista = getOrdenes();
     const orden = lista.find(o => o.id === id);
     if (!orden) return;
+
+    // Una vez entregada, la orden queda fija: no se puede volver para atr\u00e1s.
+    if (orden.estado === 'entregada') { renderOrdenes(); return; }
+
     orden.estado = estado;
+    if (estado === 'entregada') {
+      orden.fechaEntrega = new Date().toLocaleDateString('es-AR');
+      orden.archivado = true;
+    }
     guardarOrdenes(lista);
     renderOrdenes();
   }
@@ -1345,7 +1394,11 @@
     const facturado = ordenes.filter(o => o.estado === 'finalizada' || o.estado === 'entregada').reduce((acc, o) => acc + (Number(o.presupuesto) || 0), 0);
     document.getElementById('ordStatFacturado').textContent = formatoMoneda(facturado);
 
-    const filtradas = filtroOrdActivo === 'todas' ? ordenes : ordenes.filter(o => o.estado === filtroOrdActivo);
+    const filtradas = filtroOrdActivo === 'archivadas'
+      ? ordenes.filter(o => o.archivado)
+      : filtroOrdActivo === 'todas'
+        ? ordenes.filter(o => !o.archivado)
+        : ordenes.filter(o => o.estado === filtroOrdActivo);
 
     if (filtradas.length === 0) {
       cont.innerHTML = `
@@ -1369,22 +1422,25 @@
         <div class="ord-falla">${escapeHtml(o.falla)}</div>
         <div class="ord-meta">
           <span>Ingreso: ${o.ingreso}</span>
-          ${o.entregaEstimada ? `<span>Entrega: ${o.entregaEstimada}</span>` : ''}
+          ${o.fechaEntrega ? `<span>Entregado: ${o.fechaEntrega}</span>` : (o.entregaEstimada ? `<span>Entrega estimada: ${o.entregaEstimada}</span>` : '')}
           ${o.tecnico ? `<span>T\u00e9cnico: ${escapeHtml(o.tecnico)}</span>` : ''}
           ${o.garantiaDias ? `<span>Garant\u00eda: ${o.garantiaDias} d\u00edas</span>` : ''}
         </div>
         <div class="ord-precio">${formatoMoneda(o.presupuesto)}</div>
 
         <div class="ord-actions">
-          <select onchange="cambiarEstadoOrden(${o.id}, this.value)">
-            ${Object.keys(NOMBRES_ESTADO_ORDEN).map(k => `<option value="${k}" ${o.estado === k ? 'selected' : ''}>${NOMBRES_ESTADO_ORDEN[k]}</option>`).join('')}
-          </select>
+          ${o.estado === 'entregada'
+            ? `<span class="ord-badge entregada" style="font-size:11px;">No se puede modificar</span>`
+            : `<select onchange="cambiarEstadoOrden(${o.id}, this.value)">
+                ${Object.keys(NOMBRES_ESTADO_ORDEN).map(k => `<option value="${k}" ${o.estado === k ? 'selected' : ''}>${NOMBRES_ESTADO_ORDEN[k]}</option>`).join('')}
+              </select>`}
           <button onclick="toggleFirma(${o.id})">${o.firmaCliente ? '\u2713 Firmada' : 'Firmar'}</button>
           <button onclick="imprimirOrden(${o.id}, 'reparacion')">Planilla</button>
           <button onclick="imprimirOrden(${o.id}, 'garantia')">Garant\u00eda</button>
           <button onclick="imprimirOrden(${o.id}, 'factura')">Factura</button>
           <button class="danger" onclick="eliminarOrden(${o.id})">Eliminar</button>
         </div>
+        ${o.archivado ? '<p style="font-size:10.5px; color:var(--tf-text-dim); margin-top:6px;">Archivada autom\u00e1ticamente al entregarse.</p>' : ''}
 
         <div class="firma-box" id="firmaBox_${o.id}">
           <canvas id="firmaCanvas_${o.id}"></canvas>
@@ -1455,7 +1511,7 @@
       <div class="row"><span>Equipo</span><span>${escapeHtml(o.equipo)}</span></div>
       <div class="row"><span>IMEI</span><span>${escapeHtml(o.imei) || '\u2014'}</span></div>
       <div class="row"><span>Fecha de ingreso</span><span>${o.ingreso || '\u2014'}</span></div>
-      <div class="row"><span>Entrega estimada</span><span>${o.entregaEstimada || '\u2014'}</span></div>
+      <div class="row"><span>${o.fechaEntrega ? 'Fecha de entrega' : 'Entrega estimada'}</span><span>${o.fechaEntrega || o.entregaEstimada || '\u2014'}</span></div>
       <div class="row"><span>T\u00e9cnico asignado</span><span>${escapeHtml(o.tecnico) || '\u2014'}</span></div>
       <h2>Falla reportada</h2><div class="box">${escapeHtml(o.falla)}</div>
       <h2>Presupuesto</h2>
